@@ -1,0 +1,9 @@
+<% if @world_exists %>
+  Your world already exists. Creating a new one will overwrite your existing world.
+<% else %>
+  You don't have a world yet.
+<% end %>
+
+<%= form_tag worlds_path do %>
+  <button type="submit">Create a new World</button>
+<% end %>

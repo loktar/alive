@@ -1,4 +1,8 @@
 Alive::Application.routes.draw do
+
+  resources :tiles
+  resources :worlds
+
   # The priority is based upon order of creation:
   # first created -> highest priority.
 
