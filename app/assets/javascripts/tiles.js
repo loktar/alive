@@ -11,7 +11,7 @@
       var maxX = 0;
       var maxY = 0;
 
-      var tileSize = 50;
+      var tileSize = 5;
 
       self.$el.html('');
       for (var i = 0; i < tiles.length; i++) {

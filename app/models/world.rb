@@ -1,5 +1,5 @@
 class World
-  WORLD_SIZE = 3
+  WORLD_SIZE = 50
 
   def self.instance
     @@world ||= generate_new_world
@@ -75,12 +75,12 @@ class World
   end
 
   def update_life_on_living_tile(tile)
-    tile.life_amount = [tile.life_amount + 0.01, 1].min
+    tile.life_amount = [tile.life_amount + 0.05, 1].min
   end
 
   def spread_life_to_adjacent_tile(tile)
     unless tile.has_life?
-      tile.life_amount = life_amount_with_probability(0.3)
+      tile.life_amount = life_amount_with_probability(0.1)
     end
   end
 
