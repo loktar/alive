@@ -1,5 +1,8 @@
 <div id="tiles"></div>
 
+<button id="auto_toggle">Start</button>
+
 <%= javascript_tag do %>
-  $('#tiles').tiles();
+  var tiles = new Tiles('#tiles');
+  new TilesRefresher('#auto_toggle', tiles);
 <% end %>

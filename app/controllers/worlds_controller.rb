@@ -1,11 +1,11 @@
 class WorldsController < ApplicationController
 
   def index
-    @world_exists = Tile.count > 0
+    @world_exists = World.instance_exists?
   end
 
   def create
-    WorldGenerator.new.generate_world
+    World.generate_new_world
     redirect_to worlds_path
   end
 

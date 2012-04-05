@@ -4,6 +4,10 @@
 }
 
 .tile {
-  background: red;
+  background: #ffcc00;
   position: absolute;
+}
+
+.tile.life {
+  background: #006600;
 }
