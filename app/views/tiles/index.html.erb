@@ -1,8 +1,17 @@
-<div id="tiles"></div>
-
 <button id="auto_toggle">Start</button>
+
+<button id="create_world">Create World</button>
+
+<div id="tiles"></div>
 
 <%= javascript_tag do %>
   var tiles = new Tiles('#tiles');
   new TilesRefresher('#auto_toggle', tiles);
+
+  $('#create_world').click(function(){
+    $.ajax({
+      url:'/worlds',
+      type:'post',
+    });
+  });
 <% end %>
