@@ -1,9 +1,15 @@
 class Tile
-  attr_accessor :x, :y, :life_amount
-  attr_accessor :left_tile, :top_tile, :right_tile, :bottom_tile
+  attr_accessor :x, :y,
+                :life_amount, :herbivore_count,
+                :left_tile, :top_tile, :right_tile, :bottom_tile
+
+  def initialize
+    self.life_amount = 0
+    self.herbivore_count = 0
+  end
 
   def has_life?
-    life_amount > 0
+    self.life_amount > 0
   end
 
   def adjacent_tiles
@@ -15,6 +21,7 @@ class Tile
             x: x,
             y: y,
             life_amount: life_amount,
+            herbivore_count: herbivore_count,
     }
   end
 

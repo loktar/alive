@@ -1,5 +1,5 @@
 class World
-  WORLD_SIZE = 20
+  WORLD_SIZE = 50
 
   def self.instance
     @@world ||= generate_new_world
@@ -29,7 +29,7 @@ class World
         tile = Tile.new
         tile.x = x
         tile.y = y
-        tile.life_amount = starting_life_amount_for_tile(tile)
+        tile.life_amount = starting_life_amount_for_tile
 
         row << tile
       end
@@ -66,16 +66,18 @@ class World
     end
   end
 
-  def starting_life_amount_for_tile(tile)
-    if Random.rand < 0.3
-      tile.life_amount = Random.rand 0.6
-    else
-      tile.life_amount = 0
-    end
+  def starting_life_amount_for_tile
+    Random.rand < 0.3 ? Random.rand(0.6) : 0
   end
 
   def update_life_on_living_tile(tile)
     tile.life_amount = [tile.life_amount + 0.05, 1].min
+
+    tile.life_amount = tile.life_amount - (tile.herbivore_count * 0.05)
+
+    if tile.life_amount > 0.5 && Random.rand < 0.1
+      tile.herbivore_count = tile.herbivore_count + 1
+    end
   end
 
   def spread_life_to_adjacent_tile(tile)
