@@ -28,6 +28,8 @@
           left:tile.x * tileSize
         });
 
+        $tileEl.attr('herbivore_count', tile.herbivore_count);
+
         var life_amount = Number(tile.life_amount);
         if (life_amount) {
           $tileEl.addClass('life');

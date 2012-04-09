@@ -1,5 +1,5 @@
 class World
-  WORLD_SIZE = 50
+  WORLD_SIZE = 25
 
   def self.instance
     @@world ||= generate_new_world
@@ -41,10 +41,10 @@ class World
   def assign_adjacent_tiles(rows)
     rows.each_with_index do |row, y|
       row.each_with_index do |tile, x|
-        tile.top_tile     = rows[y - 1].try(:[], x)
-        tile.bottom_tile  = rows[y + 1].try(:[], x)
-        tile.left_tile    = rows[y].try(:[], x - 1)
-        tile.right_tile   = rows[y].try(:[], x + 1)
+        tile.top_tile = rows[y - 1].try(:[], x)
+        tile.bottom_tile = rows[y + 1].try(:[], x)
+        tile.left_tile = rows[y].try(:[], x - 1)
+        tile.right_tile = rows[y].try(:[], x + 1)
       end
     end
   end
@@ -63,6 +63,7 @@ class World
           spread_life_to_adjacent_tile(adjacent_tile)
         end
       end
+      HerbivoreHelper.eat_with_tile(tile)
     end
   end
 
@@ -71,13 +72,7 @@ class World
   end
 
   def update_life_on_living_tile(tile)
-    tile.life_amount = [tile.life_amount + 0.05, 1].min
-
-    tile.life_amount = tile.life_amount - (tile.herbivore_count * 0.05)
-
-    if tile.life_amount > 0.5 && Random.rand < 0.1
-      tile.herbivore_count = tile.herbivore_count + 1
-    end
+    tile.life_amount = [tile.life_amount + 0.1, 1].min
   end
 
   def spread_life_to_adjacent_tile(tile)
@@ -90,8 +85,24 @@ class World
     @rows.flatten
   end
 
+  def herbivore_count
+    all_tiles.map { |tile| tile.herbivore_count }.inject { |a, b| a + b }
+  end
+
+  def total_life
+    all_tiles.map { |tile| tile.life_amount }.inject { |a, b| a + b }
+  end
+
   def to_s
     "#<#{self.class}:#{object_id} with #{all_tiles.count} tiles>"
+  end
+
+  def as_json(options={})
+    {
+            herbivore_count: herbivore_count,
+            total_life: total_life,
+            tiles: all_tiles,
+    }
   end
 
 end

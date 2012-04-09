@@ -35,10 +35,11 @@
     fetchNewTiles:function () {
       var self = this;
       if (this.isStarted) {
-        $.ajax('/tiles.json', {
-          success:function (newTiles) {
-            self.tiles.updateTiles(newTiles);
-            console.log("fetching new tiles");
+        $.ajax('/worlds/current.json', {
+          success:function (world) {
+            $('#herbivore_count').text(world.herbivore_count);
+            $('#total_life').text(Number(world.total_life).toFixed(2));
+            self.tiles.updateTiles(world.tiles);
             setTimeout(function() { self.fetchNewTiles(); });
           }
         });

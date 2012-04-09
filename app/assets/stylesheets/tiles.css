@@ -1,3 +1,7 @@
+body {
+  font-family: Helvetica, sans-serif;
+}
+
 #tiles {
   margin: 20px auto;
   position: relative;
@@ -10,4 +14,21 @@
 
 .tile.life {
   background: #006600;
+}
+
+#info {
+  position: fixed;
+  right: 0;
+  top: 0;
+  width: 200px;
+}
+
+#info h1 {
+  font-size: 1.2em;
+}
+
+#info ol {
+  list-style: none;
+  margin: 0;
+  padding: 0;
 }

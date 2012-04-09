@@ -20,7 +20,7 @@ class Tile
     {
             x: x,
             y: y,
-            life_amount: life_amount,
+            life_amount: life_amount.round(3),
             herbivore_count: herbivore_count,
     }
   end

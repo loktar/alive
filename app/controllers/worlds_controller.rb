@@ -9,4 +9,10 @@ class WorldsController < ApplicationController
     redirect_to worlds_path
   end
 
+  def current
+    world = World.instance
+    world.update_life
+    render json: world
+  end
+
 end
