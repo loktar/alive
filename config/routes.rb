@@ -1,5 +1,6 @@
 Alive::Application.routes.draw do
 
+  resources :tiles, only: :index
   resources :worlds do
     get :current, on: :collection
   end

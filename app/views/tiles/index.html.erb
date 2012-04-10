@@ -8,18 +8,22 @@
     <li>Total life: <span id="total_life"></span></li>
     <li>Herbivores: <span id="herbivore_count"></span></li>
   </ol>
+
+  <div id="graph"></div>
 </div>
 
 <div id="tiles"></div>
 
 <%= javascript_tag do %>
-  var tiles = new Tiles('#tiles');
-  new TilesRefresher('#auto_toggle', tiles);
+  $(function() {
+    var tiles = new Tiles('#tiles');
+    new TilesRefresher('#auto_toggle', tiles);
 
-  $('#create_world').click(function(){
-    $.ajax({
-      url:'/worlds',
-      type:'post',
+    $('#create_world').click(function(){
+      $.ajax({
+        url:'/worlds',
+        type:'post',
+      });
     });
   });
 <% end %>
