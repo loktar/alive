@@ -1,5 +1,5 @@
 class World
-  WORLD_SIZE = 25
+  WORLD_SIZE = 10
 
   def self.instance
     @@world ||= generate_new_world

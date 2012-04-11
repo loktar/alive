@@ -11,7 +11,7 @@
       var maxX = 0;
       var maxY = 0;
 
-      var tileSize = 10;
+      var tileSize = 20;
 
       self.$el.html('');
       for (var i = 0; i < tiles.length; i++) {
@@ -33,7 +33,18 @@
         var life_amount = Number(tile.life_amount);
         if (life_amount) {
           $tileEl.addClass('life');
-          $tileEl.css({opacity:life_amount});
+          $tileEl.css({background:'rgba(0, 100, 0, ' + life_amount + ')'});
+        }
+
+        for(var j = 0; j < tile.plants.length; j++) {
+          var plant = tile.plants[j];
+          var $plantEl = $('<div class="plant"></div>');
+          $plantEl.css({
+            top:plant[0] * tileSize,
+            left:plant[1] * tileSize
+          });
+
+          $tileEl.append($plantEl);
         }
 
         self.$el.append($tileEl);

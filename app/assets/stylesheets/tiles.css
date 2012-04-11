@@ -16,6 +16,14 @@ body {
   background: #006600;
 }
 
+.tile .plant {
+  position:absolute;
+  background: #90ee90;
+  height: 4px;
+  width: 4px;
+  z-index: 1;
+}
+
 #info {
   position: fixed;
   right: 0;
