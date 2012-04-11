@@ -22,13 +22,17 @@ class Tile
     @life_amount = value
 
     desired_number_of_plants = (life_amount / LIFE_PER_PLANT).floor
-    add_or_remove_random_points(plants, desired_number_of_plants)
+    add_or_remove_random_points(plants, desired_number_of_plants) {
+      [Random.rand.round(3), Random.rand.round(3)]
+    }
 
     life_amount
   end
 
   def herbivore_count=(value)
-    add_or_remove_random_points(herbivores, value)
+    add_or_remove_random_points(herbivores, value) {
+      [Random.rand.round(3), Random.rand.round(3)]
+    }
     herbivore_count
   end
 
@@ -37,7 +41,9 @@ class Tile
   end
 
   def carnivore_count=(value)
-    add_or_remove_random_points(carnivores, value)
+    add_or_remove_random_points(carnivores, value) {
+      Carnivore.new(x: Random.rand.round(3), y: Random.rand.round(3))
+    }
     carnivore_count
   end
 
@@ -45,10 +51,10 @@ class Tile
     carnivores.count
   end
 
-  def add_or_remove_random_points(array, desired_count)
+  def add_or_remove_random_points(array, desired_count, *block)
     delta = desired_count - array.count
     if delta > 0
-      (0...delta).each { array << [Random.rand.round(3), Random.rand.round(3)] }
+      (0...delta).each { array << yield }
     else
       (0...delta.abs).each { array.shift }
     end

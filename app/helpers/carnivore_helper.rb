@@ -24,6 +24,7 @@ module CarnivoreHelper
     old = tile.herbivore_count
     tile.herbivore_count = [tile.herbivore_count - desired_food_for_tile(tile), 0].max
 
+    tile.carnivores.each { |c| c.eat }
     #puts "Consume herbivores from #{old} to #{tile.herbivore_count}"
   end
 
@@ -34,7 +35,11 @@ module CarnivoreHelper
   end
 
   def self.desired_food_for_tile(tile)
-    tile.carnivore_count * CARNIVORE_MEAL_SIZE
+    hungry_carnivores_for_tile(tile) * CARNIVORE_MEAL_SIZE
+  end
+
+  def self.hungry_carnivores_for_tile(tile)
+    tile.carnivores.select { |c| c.hungry? }.count
   end
 
   def self.available_food_for_tile(tile)
