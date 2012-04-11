@@ -37,6 +37,7 @@
 
         self.plotPoints(tile.plants, 'plant', $tileEl);
         self.plotPoints(tile.herbivores, 'herbivore', $tileEl);
+        self.plotPoints(tile.carnivores, 'carnivore', $tileEl);
 
         self.$el.append($tileEl);
       }
@@ -50,7 +51,7 @@
     plotPoints:function (points, className, $tileEl) {
       for (var i = 0; i < points.length; i++) {
         var point = points[i];
-        var $pointEl = $('<div></div>').addClass(className);
+        var $pointEl = $('<div></div>').addClass(className).addClass('entity');
         $pointEl.css({
           top:point[0] * TILE_SIZE,
           left:point[1] * TILE_SIZE

@@ -4,11 +4,13 @@ class Tile
   attr_accessor :x, :y,
                 :life_amount, :plants,
                 :herbivores,
+                :carnivores,
                 :left_tile, :top_tile, :right_tile, :bottom_tile
 
   def initialize
     self.plants = []
     self.herbivores = []
+    self.carnivores = []
     self.life_amount = 0
   end
 
@@ -27,12 +29,20 @@ class Tile
 
   def herbivore_count=(value)
     add_or_remove_random_points(herbivores, value)
-
     herbivore_count
   end
 
   def herbivore_count
     herbivores.count
+  end
+
+  def carnivore_count=(value)
+    add_or_remove_random_points(carnivores, value)
+    carnivore_count
+  end
+
+  def carnivore_count
+    carnivores.count
   end
 
   def add_or_remove_random_points(array, desired_count)
@@ -54,7 +64,8 @@ class Tile
             y: y,
             life_amount: life_amount.round(3),
             plants: plants,
-            herbivores: herbivores
+            herbivores: herbivores,
+            carnivores: carnivores,
     }
   end
 

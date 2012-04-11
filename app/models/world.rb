@@ -64,6 +64,7 @@ class World
         end
       end
       HerbivoreHelper.eat_with_tile(tile)
+      CarnivoreHelper.eat_with_tile(tile)
     end
   end
 
@@ -89,6 +90,10 @@ class World
     all_tiles.map { |tile| tile.herbivore_count }.inject { |a, b| a + b }
   end
 
+  def carnivore_count
+    all_tiles.map { |tile| tile.carnivore_count }.inject { |a, b| a + b }
+  end
+
   def total_life
     all_tiles.map { |tile| tile.life_amount }.inject { |a, b| a + b }
   end
@@ -100,6 +105,7 @@ class World
   def as_json(options={})
     {
             herbivore_count: herbivore_count,
+            carnivore_count: carnivore_count,
             total_life: total_life,
             tiles: all_tiles,
     }

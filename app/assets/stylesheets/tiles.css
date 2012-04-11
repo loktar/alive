@@ -16,8 +16,7 @@ body {
   background: #006600;
 }
 
-.tile .plant,
-.tile .herbivore {
+.tile .entity {
   position:absolute;
   height: 4px;
   width: 4px;
@@ -29,7 +28,11 @@ body {
 }
 
 .tile .herbivore {
-  background: tan;
+  background: #d1b38b;
+}
+
+.tile .carnivore {
+  background: #bb0000;
 }
 
 #info {
