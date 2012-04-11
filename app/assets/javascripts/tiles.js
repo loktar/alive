@@ -1,6 +1,6 @@
 (function ($) {
 
-  var TILE_SIZE = 20;
+  var TILE_SIZE = 50;
 
   window.Tiles = function (el) {
     this.$el = $(el);
