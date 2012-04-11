@@ -16,12 +16,20 @@ body {
   background: #006600;
 }
 
-.tile .plant {
+.tile .plant,
+.tile .herbivore {
   position:absolute;
-  background: #90ee90;
   height: 4px;
   width: 4px;
   z-index: 1;
+}
+
+.tile .plant {
+  background: #90ee90;
+}
+
+.tile .herbivore {
+  background: tan;
 }
 
 #info {

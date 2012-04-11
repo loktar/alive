@@ -1,5 +1,7 @@
 (function ($) {
 
+  var TILE_SIZE = 20;
+
   window.Tiles = function (el) {
     this.$el = $(el);
   };
@@ -11,7 +13,6 @@
       var maxX = 0;
       var maxY = 0;
 
-      var tileSize = 20;
 
       self.$el.html('');
       for (var i = 0; i < tiles.length; i++) {
@@ -22,13 +23,11 @@
 
         var $tileEl = $('<div class="tile"></div>');
         $tileEl.css({
-          height:tileSize,
-          width:tileSize,
-          top:tile.y * tileSize,
-          left:tile.x * tileSize
+          height:TILE_SIZE,
+          width:TILE_SIZE,
+          top:tile.y * TILE_SIZE,
+          left:tile.x * TILE_SIZE
         });
-
-        $tileEl.attr('herbivore_count', tile.herbivore_count);
 
         var life_amount = Number(tile.life_amount);
         if (life_amount) {
@@ -36,24 +35,29 @@
           $tileEl.css({background:'rgba(0, 100, 0, ' + life_amount + ')'});
         }
 
-        for(var j = 0; j < tile.plants.length; j++) {
-          var plant = tile.plants[j];
-          var $plantEl = $('<div class="plant"></div>');
-          $plantEl.css({
-            top:plant[0] * tileSize,
-            left:plant[1] * tileSize
-          });
-
-          $tileEl.append($plantEl);
-        }
+        self.plotPoints(tile.plants, 'plant', $tileEl);
+        self.plotPoints(tile.herbivores, 'herbivore', $tileEl);
 
         self.$el.append($tileEl);
       }
 
       self.$el.css({
-        height:tileSize * (maxY + 1),
-        width:tileSize * (maxX + 1)
+        height:TILE_SIZE * (maxY + 1),
+        width:TILE_SIZE * (maxX + 1)
       });
+    },
+
+    plotPoints:function (points, className, $tileEl) {
+      for (var i = 0; i < points.length; i++) {
+        var point = points[i];
+        var $pointEl = $('<div></div>').addClass(className);
+        $pointEl.css({
+          top:point[0] * TILE_SIZE,
+          left:point[1] * TILE_SIZE
+        });
+
+        $tileEl.append($pointEl);
+      }
     }
   };
 }(jQuery));
