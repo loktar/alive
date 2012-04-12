@@ -51,10 +51,13 @@
     plotPoints:function (points, className, $tileEl) {
       for (var i = 0; i < points.length; i++) {
         var point = points[i];
-        var $pointEl = $('<div></div>').addClass(className).addClass('entity');
+        var $pointEl = $('<div></div>')
+                .addClass(className).addClass('entity')
+                .attr({id: 'entity-' + point.id});
+
         $pointEl.css({
-          top:point[0] * TILE_SIZE,
-          left:point[1] * TILE_SIZE
+          top:point.y * TILE_SIZE,
+          left:point.x * TILE_SIZE
         });
 
         $tileEl.append($pointEl);

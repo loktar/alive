@@ -1,9 +1,8 @@
-class Carnivore
-  attr_accessor :x, :y, :hunger_count
+class Carnivore < Entity
+  attr_accessor :hunger_count
 
   def initialize(attrs={})
-    @x = attrs[:x]
-    @y = attrs[:y]
+    super(attrs)
     @hunger_count = 0
   end
 
@@ -19,7 +18,4 @@ class Carnivore
     end
   end
 
-  def as_json(options = {})
-    [x, y]
-  end
 end
