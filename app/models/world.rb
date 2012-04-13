@@ -86,6 +86,10 @@ class World
     @rows.flatten
   end
 
+  def kill_entity_by_id(entity_id)
+    all_tiles.each { |tile| tile.kill_entity_by_id(entity_id) }
+  end
+
   def herbivore_count
     all_tiles.map { |tile| tile.herbivore_count }.inject { |a, b| a + b }
   end

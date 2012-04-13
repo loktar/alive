@@ -77,7 +77,7 @@
             self.addDataToGraph(world);
             setTimeout(function () {
               self.fetchNewTiles();
-            });
+            }, 2000);
           }
         });
       }

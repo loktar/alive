@@ -2,7 +2,7 @@ class Tile
   LIFE_PER_PLANT = 0.05
 
   attr_accessor :x, :y,
-                :life_amount, :plants,
+                :plants,
                 :herbivores,
                 :carnivores,
                 :left_tile, :top_tile, :right_tile, :bottom_tile
@@ -11,22 +11,29 @@ class Tile
     self.plants = []
     self.herbivores = []
     self.carnivores = []
-    self.life_amount = 0
   end
 
   def has_life?
     self.life_amount > 0
   end
 
-  def life_amount=(value)
-    @life_amount = value
+  def kill_entity_by_id(entity_id)
+    plants.delete_if {|e| e.id == entity_id }
+    herbivores.delete_if {|e| e.id == entity_id }
+    carnivores.delete_if {|e| e.id == entity_id }
+  end
 
-    desired_number_of_plants = (life_amount / LIFE_PER_PLANT).floor
+  def life_amount=(value)
+    desired_number_of_plants = (value / LIFE_PER_PLANT).floor
     add_or_remove_random_points(plants, desired_number_of_plants) {
       Plant.new(x: Random.rand.round(3), y: Random.rand.round(3))
     }
 
     life_amount
+  end
+
+  def life_amount
+    plants.count * LIFE_PER_PLANT
   end
 
   def herbivore_count=(value)
@@ -68,7 +75,6 @@ class Tile
     {
             x: x,
             y: y,
-            life_amount: life_amount.round(3),
             plants: plants,
             herbivores: herbivores,
             carnivores: carnivores,

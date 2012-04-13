@@ -5,6 +5,8 @@ Alive::Application.routes.draw do
     get :current, on: :collection
   end
 
+  resources :entities, only: :destroy
+
   # The priority is based upon order of creation:
   # first created -> highest priority.
 

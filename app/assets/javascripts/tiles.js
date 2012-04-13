@@ -4,9 +4,29 @@
 
   window.Tiles = function (el) {
     this.$el = $(el);
+
+    this.$el.on('click', '.entity', this.killEntity.bind(this));
+    this.$el.on('mouseover', '.entity', this.killEntity.bind(this));
   };
 
   Tiles.prototype = {
+    killEntity:function (e) {
+      var self = this;
+
+      var entityId = e.target.id.substring('entity-'.length);
+      $.ajax({
+        url: '/entities/' + entityId,
+        type: 'DELETE',
+        success: function() {
+          var $entityEl = $(e.target);
+          var $tileEl = $entityEl.parent('.tile');
+
+          $entityEl.remove();
+          self.updateLifeForTile($tileEl);
+        }
+      });
+    },
+
     updateTiles:function (tiles) {
       var self = this;
 
@@ -29,15 +49,11 @@
           left:tile.x * TILE_SIZE
         });
 
-        var life_amount = Number(tile.life_amount);
-        if (life_amount) {
-          $tileEl.addClass('life');
-          $tileEl.css({background:'rgba(0, 100, 0, ' + life_amount + ')'});
-        }
-
         self.plotPoints(tile.plants, 'plant', $tileEl);
         self.plotPoints(tile.herbivores, 'herbivore', $tileEl);
         self.plotPoints(tile.carnivores, 'carnivore', $tileEl);
+
+        self.updateLifeForTile($tileEl);
 
         self.$el.append($tileEl);
       }
@@ -46,6 +62,16 @@
         height:TILE_SIZE * (maxY + 1),
         width:TILE_SIZE * (maxX + 1)
       });
+    },
+
+    updateLifeForTile: function($tileEl) {
+      var life_amount = $tileEl.find('.plant').length * 0.05;
+      if (life_amount) {
+        $tileEl.addClass('life');
+        $tileEl.css({background:'rgba(0, 100, 0, ' + life_amount + ')'});
+      } else {
+        $tileEl.removeClass('life');
+      }
     },
 
     plotPoints:function (points, className, $tileEl) {
