@@ -90,6 +90,10 @@ class World
     all_tiles.each { |tile| tile.kill_entity_by_id(entity_id) }
   end
 
+  def plant_count
+    all_tiles.map { |tile| tile.plants.count }.inject { |a, b| a + b }
+  end
+
   def herbivore_count
     all_tiles.map { |tile| tile.herbivore_count }.inject { |a, b| a + b }
   end
@@ -108,6 +112,7 @@ class World
 
   def as_json(options={})
     {
+            plant_count: plant_count,
             herbivore_count: herbivore_count,
             carnivore_count: carnivore_count,
             total_life: total_life,

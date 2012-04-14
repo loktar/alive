@@ -49,7 +49,7 @@
     },
 
     addDataToGraph:function (world) {
-      this.dataPoints[LIFE_GRAPH].push([0, world.total_life]);
+      this.dataPoints[LIFE_GRAPH].push([0, world.plant_count]);
       this.dataPoints[HERB_GRAPH].push([0, world.herbivore_count]);
       this.dataPoints[CARN_GRAPH].push([0, world.carnivore_count]);
 
@@ -69,9 +69,9 @@
       if (this.isStarted) {
         $.ajax('/worlds/current.json', {
           success:function (world) {
+            $('#plant_count').text(Number(world.plant_count));
             $('#herbivore_count').text(world.herbivore_count);
             $('#carnivore_count').text(world.carnivore_count);
-            $('#total_life').text(Number(world.total_life).toFixed(2));
 
             self.tiles.updateTiles(world.tiles);
             self.addDataToGraph(world);
