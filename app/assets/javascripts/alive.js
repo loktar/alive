@@ -5,13 +5,16 @@
     templates: {},
     views: {},
     init: function () {
-      var historicalData = new Alive.models.HistoricalData();
-      var info = new Alive.views.Info({model: historicalData});
-      info.render();
+      this.allLife = new Alive.collections.AllLife();
+      this.tiles = new Alive.collections.Tiles();
 
-      var tiles = new Tiles('#tiles');
+      this.historicalData = new Alive.models.HistoricalData({tiles: this.tiles});
+      this.info = new Alive.views.Info({model: this.historicalData});
+      this.info.render();
 
-      new Alive.views.Refresher({model: historicalData, el: $('#auto_toggle'), tiles: tiles});
+      this.world = new Alive.views.World({el: $('#world'), collection: this.tiles});
+
+      this.refresher = new Alive.views.Refresher({collection: this.tiles, el: $('#auto_toggle')});
     }
   };
 }(jQuery));

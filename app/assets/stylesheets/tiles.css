@@ -2,7 +2,7 @@ body {
   font-family: Helvetica, sans-serif;
 }
 
-#tiles {
+#world {
   background: #ffcc00;
   margin: 20px auto;
   position: relative;

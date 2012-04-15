@@ -112,11 +112,7 @@ class World
 
   def as_json(options={})
     {
-            plant_count: plant_count,
-            herbivore_count: herbivore_count,
-            carnivore_count: carnivore_count,
-            total_life: total_life,
-            tiles: all_tiles,
+            tiles: all_tiles
     }
   end
 

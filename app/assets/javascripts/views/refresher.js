@@ -6,7 +6,6 @@
     },
 
     initialize: function () {
-      this.tiles = this.options.tiles;
       this.isStarted = false;
     },
 
@@ -38,8 +37,7 @@
     },
 
     updateWorld: function (world) {
-      this.model.addDataPoints({plants: world.plant_count, herbivores: world.herbivore_count, carnivores: world.carnivore_count});
-      this.tiles.updateTiles(world.tiles);
+      this.collection.reset(world.tiles);
       var self = this;
       setTimeout(function () {
         self.fetchNewTiles();

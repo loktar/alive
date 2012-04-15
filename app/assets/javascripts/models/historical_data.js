@@ -4,6 +4,16 @@
       this.set('plants', []);
       this.set('herbivores', []);
       this.set('carnivores', []);
+
+      this.get('tiles').on('reset', this.addNewDataPoints, this);
+    },
+
+    addNewDataPoints: function (collection) {
+      var dataPointNumber = this.get('plants').length;
+      this.get('plants').push([dataPointNumber, collection.plantCount()]);
+      this.get('herbivores').push([dataPointNumber, collection.herbivoreCount()]);
+      this.get('carnivores').push([dataPointNumber, collection.carnivoreCount()]);
+      this.trigger('change');
     },
 
     dataPoints: function () {
@@ -24,15 +34,6 @@
 
     carnivoreCount: function () {
       return this.countFor('carnivores');
-    },
-
-    addDataPoints: function (points) {
-      var dataPointNumber = this.get('plants').length;
-      this.get('plants').push([dataPointNumber, points.plants]);
-      this.get('herbivores').push([dataPointNumber, points.herbivores]);
-      this.get('carnivores').push([dataPointNumber, points.carnivores]);
-
-      this.trigger('change');
     },
 
     countFor: function (lifeType) {
