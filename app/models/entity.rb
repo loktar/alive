@@ -21,6 +21,7 @@ class Entity
             id: id,
             x: x,
             y: y,
+            lifeType: self.class.name.downcase,
             isOld: old?
     }
   end

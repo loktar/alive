@@ -9,7 +9,9 @@ body {
 }
 
 .tile {
-  position: absolute;
+  display: inline-block;
+  position: relative;
+  margin: 0 0 -4px;
 }
 
 .tile.life {

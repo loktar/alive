@@ -2,6 +2,7 @@
   window.Alive = {
     models: {},
     collections: {},
+    templates: {},
     views: {},
     init: function () {
       var historicalData = new Alive.models.HistoricalData();
