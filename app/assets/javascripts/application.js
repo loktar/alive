@@ -12,4 +12,10 @@
 //
 //= require jquery
 //= require jquery_ujs
+//= require vendor/underscore
+//= require vendor/backbone
+//= require alive
+//= require_tree ./models
+//= require_tree ./collections
+//= require_tree ./views
 //= require_tree .

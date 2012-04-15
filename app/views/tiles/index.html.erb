@@ -17,8 +17,7 @@
 
 <%= javascript_tag do %>
   $(function() {
-    var tiles = new Tiles('#tiles');
-    new TilesRefresher('#auto_toggle', tiles);
+    Alive.init();
 
     $('#create_world').click(function(){
       $.ajax({
