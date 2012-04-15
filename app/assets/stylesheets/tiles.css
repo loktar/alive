@@ -23,6 +23,12 @@ body {
   z-index: 1;
 }
 
+.tile .entity.old {
+  height: 6px;
+  width: 6px;
+  border: 2px solid darkgray;
+}
+
 .tile .plant {
   background: #90ee90;
 }

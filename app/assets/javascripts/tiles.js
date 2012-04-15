@@ -79,6 +79,7 @@
         var point = points[i];
         var $pointEl = $('<div></div>')
                 .addClass(className).addClass('entity')
+                .addClass(point.isOld ? 'old' : '')
                 .attr({id: 'entity-' + point.id});
 
         $pointEl.css({

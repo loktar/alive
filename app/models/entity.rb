@@ -1,4 +1,6 @@
 class Entity
+  include Aging
+
   @@entity_count = 0
 
   def self.next_id
@@ -19,6 +21,7 @@ class Entity
             id: id,
             x: x,
             y: y,
+            isOld: old?
     }
   end
 

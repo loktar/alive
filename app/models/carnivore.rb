@@ -1,5 +1,6 @@
 class Carnivore < Entity
   attr_accessor :hunger_count
+  max_age 18
 
   def initialize(attrs={})
     super(attrs)

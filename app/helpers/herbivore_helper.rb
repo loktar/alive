@@ -2,9 +2,18 @@ module HerbivoreHelper
   HERBIVORE_MEAL_SIZE = 0.05
 
   def self.eat_with_tile(tile)
+    grow_old_with_tile(tile)
     starve_with_tile(tile)
     consume_food_with_tile(tile)
     reproduce_with_tile(tile)
+  end
+
+  def self.grow_old_with_tile(tile)
+    tile.herbivores.each do |herby|
+      if herby.grow_older_and_die
+        tile.kill_entity_by_id(herby.id)
+      end
+    end
   end
 
   def self.starve_with_tile(tile)

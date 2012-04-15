@@ -8,6 +8,14 @@ module CarnivoreHelper
     reproduce_with_tile(tile)
   end
 
+  def self.grow_old_with_tile(tile)
+    tile.carnivores.each do |carny|
+      if carny.grow_older_and_die
+        tile.kill_entity_by_id(carny.id)
+      end
+    end
+  end
+
   def self.starve_with_tile(tile)
     desired_food = desired_food_for_tile(tile)
     available_food = available_food_for_tile(tile)
