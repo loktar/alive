@@ -19,25 +19,11 @@
         height: this.tileSize
       });
 
-      this.updateLife();
-
       return this;
     },
 
     removeDeadEntity: function (entity) {
       this.$('#entity-' + entity.id).remove();
-      this.updateLife();
-    },
-
-    updateLife: function () {
-      var plantLife = this.model.get('plants').size() * 0.05;
-      if (plantLife) {
-        this.$el.addClass('life').css({
-          background: 'rgba(0, 100, 0, ' + plantLife + ')'
-        });
-      } else {
-        this.$el.removeClass('life');
-      }
     }
   });
 }(Alive));

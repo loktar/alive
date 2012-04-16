@@ -1,11 +1,18 @@
 class Tile
-  LIFE_PER_PLANT = 0.05
+  LIFE_PER_PLANT = 0.04
+  AVAILABLE_POINTS = [
+    { x: 0, y: 0 }, { x: 0.2, y: 0 }, { x: 0.4, y: 0 }, { x: 0.6, y: 0 }, { x: 0.8, y: 0 },
+      { x: 0, y: 0.2 }, { x: 0.2, y: 0.2 }, { x: 0.4, y: 0.2 }, { x: 0.6, y: 0.2 }, { x: 0.8, y: 0.2 },
+      { x: 0, y: 0.4 }, { x: 0.2, y: 0.4 }, { x: 0.4, y: 0.4 }, { x: 0.6, y: 0.4 }, { x: 0.8, y: 0.4 },
+      { x: 0, y: 0.6 }, { x: 0.2, y: 0.6 }, { x: 0.4, y: 0.6 }, { x: 0.6, y: 0.6 }, { x: 0.8, y: 0.6 },
+      { x: 0, y: 0.8 }, { x: 0.2, y: 0.8 }, { x: 0.4, y: 0.8 }, { x: 0.6, y: 0.8 }, { x: 0.8, y: 0.8 },
+  ]
 
   attr_accessor :x, :y,
-                :plants,
-                :herbivores,
-                :carnivores,
-                :left_tile, :top_tile, :right_tile, :bottom_tile
+    :plants,
+    :herbivores,
+    :carnivores,
+    :left_tile, :top_tile, :right_tile, :bottom_tile
 
   def initialize
     self.plants = []
@@ -18,15 +25,15 @@ class Tile
   end
 
   def kill_entity_by_id(entity_id)
-    plants.delete_if {|e| e.id == entity_id }
-    herbivores.delete_if {|e| e.id == entity_id }
-    carnivores.delete_if {|e| e.id == entity_id }
+    plants.delete_if { |e| e.id == entity_id }
+    herbivores.delete_if { |e| e.id == entity_id }
+    carnivores.delete_if { |e| e.id == entity_id }
   end
 
   def life_amount=(value)
     desired_number_of_plants = (value / LIFE_PER_PLANT).floor
     add_or_remove_random_points(plants, desired_number_of_plants) {
-      Plant.new(x: Random.rand.round(3), y: Random.rand.round(3))
+      Plant.new(available_point(plants))
     }
 
     life_amount
@@ -38,7 +45,7 @@ class Tile
 
   def herbivore_count=(value)
     add_or_remove_random_points(herbivores, value) {
-      Herbivore.new(x: Random.rand.round(3), y: Random.rand.round(3))
+      Herbivore.new(available_point(herbivores))
     }
     herbivore_count
   end
@@ -49,7 +56,7 @@ class Tile
 
   def carnivore_count=(value)
     add_or_remove_random_points(carnivores, value) {
-      Carnivore.new(x: Random.rand.round(3), y: Random.rand.round(3))
+      Carnivore.new(available_point(carnivores))
     }
     carnivore_count
   end
@@ -71,13 +78,13 @@ class Tile
     [left_tile, right_tile, bottom_tile, top_tile].compact
   end
 
-  def as_json(options={})
+  def as_json(options={ })
     {
-            x: x,
-            y: y,
-            plants: plants,
-            herbivores: herbivores,
-            carnivores: carnivores,
+      x: x,
+      y: y,
+      plants: plants,
+      herbivores: herbivores,
+      carnivores: carnivores,
     }
   end
 
@@ -85,4 +92,11 @@ class Tile
     "#<#{self.class}:#{object_id} x:#{x} y:#{y} life_amount:#{life_amount}>"
   end
 
+  private
+
+  def available_point(array)
+    point_index = Random.rand (1 / LIFE_PER_PLANT) - array.count
+    filled_points = array.map { |point| { x: point.x, y: point.y } }
+    AVAILABLE_POINTS.reject { |point| filled_points.include? point }[point_index]
+  end
 end
