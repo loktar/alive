@@ -1,6 +1,8 @@
 Alive::Application.routes.draw do
 
-  resources :tiles, only: :index
+  resources :tiles, only: :index do
+    get :'3d', on: :collection
+  end
   resources :worlds do
     get :current, on: :collection
   end
