@@ -1,12 +1,10 @@
 class Tile
   LIFE_PER_PLANT = 0.04
-  AVAILABLE_POINTS = [
-    { x: 0, y: 0 }, { x: 0.2, y: 0 }, { x: 0.4, y: 0 }, { x: 0.6, y: 0 }, { x: 0.8, y: 0 },
-      { x: 0, y: 0.2 }, { x: 0.2, y: 0.2 }, { x: 0.4, y: 0.2 }, { x: 0.6, y: 0.2 }, { x: 0.8, y: 0.2 },
-      { x: 0, y: 0.4 }, { x: 0.2, y: 0.4 }, { x: 0.4, y: 0.4 }, { x: 0.6, y: 0.4 }, { x: 0.8, y: 0.4 },
-      { x: 0, y: 0.6 }, { x: 0.2, y: 0.6 }, { x: 0.4, y: 0.6 }, { x: 0.6, y: 0.6 }, { x: 0.8, y: 0.6 },
-      { x: 0, y: 0.8 }, { x: 0.2, y: 0.8 }, { x: 0.4, y: 0.8 }, { x: 0.6, y: 0.8 }, { x: 0.8, y: 0.8 },
-  ]
+  AVAILABLE_POINTS = (0..20).map do |x|
+    (0..20).map do |y|
+      {x: x / 20.0, y: y / 20.0}
+    end
+  end.flatten
 
   attr_accessor :x, :y,
     :plants,
@@ -95,8 +93,9 @@ class Tile
   private
 
   def available_point(array)
-    point_index = Random.rand (1 / LIFE_PER_PLANT) - array.count
     filled_points = array.map { |point| { x: point.x, y: point.y } }
-    AVAILABLE_POINTS.reject { |point| filled_points.include? point }[point_index]
+    unfilled_points = AVAILABLE_POINTS.reject { |point| filled_points.include? point }
+
+    unfilled_points[Random.rand(unfilled_points.count)]
   end
 end
