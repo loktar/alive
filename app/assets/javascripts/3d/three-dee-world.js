@@ -20,6 +20,10 @@
       this.camera.lookAt(new THREE.Vector3(500, 500, 0));
       this.scene.add(this.camera);
 
+      var sunLight = new THREE.PointLight(0xffffff);
+      sunLight.position.set(TILE_SIZE * 3, TILE_SIZE * 3, TILE_SIZE * 6);
+      this.scene.add(sunLight);
+
       var geometry = new THREE.CubeGeometry(200, 200, 200);
       var material = new THREE.MeshBasicMaterial({ color:0xff0000, wireframe:true });
 
@@ -49,14 +53,14 @@
       for (var i = 0; i < tiles.length; i++) {
         var tile = tiles[i];
         var geometry = new THREE.PlaneGeometry(TILE_SIZE, TILE_SIZE, 1, 1);
-        var material = new THREE.MeshBasicMaterial({ color:0xffcc00, wireframe:WIREFRAME });
+        var material = new THREE.MeshLambertMaterial({ color:0xffcc00, wireframe:WIREFRAME });
 
-        var tileMesh = new THREE.Mesh(geometry, material);
+        var mesh = new THREE.Mesh(geometry, material);
         var tileX = tile.x * TILE_SIZE;
         var tileY = tile.y * TILE_SIZE;
-        tileMesh.position.set(tileX, tileY, 0);
+        mesh.position.set(tileX, tileY, 0);
 
-        this.scene.add(tileMesh);
+        this.scene.add(mesh);
 
         this.addEntitiesToScene(tile.plants, 0x90ee90, tileX, tileY);
         this.addEntitiesToScene(tile.herbivores, 0xd1b38b, tileX, tileY);
@@ -67,14 +71,14 @@
     addEntitiesToScene:function (entities, color, tileX, tileY) {
       $.each(entities, function (i, entity) {
         var geometry = new THREE.CubeGeometry(ENTITY_SIZE, ENTITY_SIZE, ENTITY_SIZE);
-        var material = new THREE.MeshBasicMaterial({ color:color, wireframe:WIREFRAME });
+        var material = new THREE.MeshLambertMaterial({ color:color, wireframe:WIREFRAME });
 
-        var plantMesh = new THREE.Mesh(geometry, material);
+        var mesh = new THREE.Mesh(geometry, material);
         var x = tileX + ((entity.x - 0.5) * TILE_SIZE);
         var y = tileY + ((entity.y - 0.5) * TILE_SIZE);
-        plantMesh.position.set(x, y, ENTITY_SIZE / 2);
+        mesh.position.set(x, y, ENTITY_SIZE / 2);
 
-        this.scene.add(plantMesh);
+        this.scene.add(mesh);
       }.bind(this));
     },
 
