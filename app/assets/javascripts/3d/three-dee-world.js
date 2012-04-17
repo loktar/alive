@@ -12,7 +12,7 @@
 
   window.ThreeDeeWorld = function () {
     this.init();
-    this.animate();
+//    this.animate();
     this.fetchTiles();
   };
 
@@ -27,8 +27,9 @@
       this.camera.lookAt(new THREE.Vector3(500, 500, 0));
       this.scene.add(this.camera);
 
-      var sunLight = new THREE.PointLight(0xffffff);
-      sunLight.position.set(TILE_SIZE * 3, TILE_SIZE * 3, TILE_SIZE * 6);
+      var sunLight = new THREE.SpotLight(0xffffff);
+      sunLight.position.set(TILE_SIZE * 5, TILE_SIZE * 5, TILE_SIZE * 3);
+      sunLight.castShadow = true;
       this.scene.add(sunLight);
 
       var geometry = new THREE.CubeGeometry(200, 200, 200);
@@ -39,6 +40,7 @@
 
       this.renderer = new THREE.WebGLRenderer();
       this.renderer.setSize(window.innerWidth, window.innerHeight);
+      this.renderer.shadowMapEnabled = true;
 
       document.body.appendChild(this.renderer.domElement);
     },
@@ -71,6 +73,7 @@
 
           var mesh = new THREE.Mesh(geometry, material);
           mesh.position.set(tileX, tileY, 0);
+          mesh.receiveShadow = true;
 
           this.scene.add(mesh);
         }
@@ -119,6 +122,8 @@
           var x = tileX + ((entity.x - 0.5) * TILE_SIZE);
           var y = tileY + ((entity.y - 0.5) * TILE_SIZE);
           mesh.position.set(x, y, ENTITY_SIZE / 2);
+          mesh.castShadow = true;
+          mesh.receiveShadow = true;
 
           this.scene.add(mesh);
 
@@ -135,6 +140,7 @@
         url:'/worlds/current.json',
         success:function (response) {
           self.addTilesToScene(response.tiles);
+          self.render();
 
           setTimeout(self.fetchTiles.bind(self), 2000);
         }
