@@ -1,0 +1,16 @@
+<button id="toggle">Start</button>
+
+<script>
+
+  $(function () {
+    var ct = new CrashTest();
+    $('#toggle').click(function() {
+      if (ct.toggle()) {
+        $('#toggle').text('Stop');
+      } else {
+        $('#toggle').text('Start');
+      }
+    });
+  });
+
+</script>

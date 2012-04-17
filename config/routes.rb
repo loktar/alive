@@ -2,6 +2,7 @@ Alive::Application.routes.draw do
 
   resources :tiles, only: :index do
     get :'3d', on: :collection
+    get :crash_test, on: :collection
   end
   resources :worlds do
     get :current, on: :collection
