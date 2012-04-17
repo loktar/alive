@@ -8,6 +8,8 @@
   var ADDED = 0;
   var DELETED = 0;
 
+  var TILES_ADDED = false;
+
   window.ThreeDeeWorld = function () {
     this.init();
     this.animate();
@@ -59,15 +61,19 @@
 
       for (var i = 0; i < tiles.length; i++) {
         var tile = tiles[i];
-        var geometry = new THREE.PlaneGeometry(TILE_SIZE, TILE_SIZE, 1, 1);
-        var material = new THREE.MeshLambertMaterial({ color:0xffcc00, wireframe:WIREFRAME });
 
-        var mesh = new THREE.Mesh(geometry, material);
         var tileX = tile.x * TILE_SIZE;
         var tileY = tile.y * TILE_SIZE;
-        mesh.position.set(tileX, tileY, 0);
 
-        this.scene.add(mesh);
+        if (!TILES_ADDED) {
+          var geometry = new THREE.PlaneGeometry(TILE_SIZE, TILE_SIZE, 1, 1);
+          var material = new THREE.MeshLambertMaterial({ color:0xffcc00, wireframe:WIREFRAME });
+
+          var mesh = new THREE.Mesh(geometry, material);
+          mesh.position.set(tileX, tileY, 0);
+
+          this.scene.add(mesh);
+        }
 
         this.addEntitiesToScene(tile.plants, 0x90ee90, tileX, tileY);
         this.addEntitiesToScene(tile.herbivores, 0xd1b38b, tileX, tileY);
@@ -76,6 +82,7 @@
 
       this.removeDeletedEntities();
 
+      TILES_ADDED = true;
       console.log("added: " + ADDED + "; deleted: " + DELETED);
     },
 
