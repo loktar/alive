@@ -8,7 +8,7 @@ class UnderscoreTemplate < Tilt::Template
   def prepare; end
 
   def evaluate(context, locals, &block)
-    template_name = context.logical_path.gsub(/^templates\/(.*)$/, \\s).to_s
+    template_name = context.logical_path.gsub(/^templates\/(.*)$/, "\\1").to_s
     @output = <<-JS
 Alive.templates['#{template_name}'] = _.template("#{escape_javascript data}")
 JS
