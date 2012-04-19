@@ -1,6 +1,7 @@
 (function (app) {
   app.views.World = Backbone.View.extend({
     tileSize: 50,
+    className: 'world',
 
     events: {
       'click .entity': 'killEntity',
@@ -27,7 +28,9 @@
       this.$el.css({
         height: this.tileSize * (maxY + 1),
         width: this.tileSize * (maxX + 1)
-      })
+      });
+
+      return this;
     },
 
     killEntity: function (e) {

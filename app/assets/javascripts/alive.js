@@ -12,7 +12,9 @@
       this.info = new Alive.views.Info({model: this.historicalData});
       this.info.render();
 
-      this.world = new Alive.views.World({el: $('#world'), collection: this.tiles});
+//      this.world = new Alive.views.World({collection: this.tiles}).render();
+      this.world = new Alive.views.ThreeDeeWorld({collection: this.tiles});
+      document.body.appendChild(this.world.el);
 
       this.refresher = new Alive.views.Refresher({collection: this.tiles, el: $('#auto_toggle')});
     }

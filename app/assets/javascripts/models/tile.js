@@ -17,6 +17,14 @@
 
     notifyDied: function (entity) {
       this.trigger('death', entity);
+    },
+
+    x: function (tileSize) {
+      return this.get('x') * tileSize;
+    },
+
+    y: function (tileSize) {
+      return this.get('y') * tileSize;
     }
   });
 }(Alive));

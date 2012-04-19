@@ -2,7 +2,7 @@ body {
   font-family: Helvetica, sans-serif;
 }
 
-#world {
+.world {
   background: #ffcc00;
   margin: 20px auto;
   position: relative;
@@ -41,6 +41,13 @@ body {
 
 .tile .carnivore {
   background: #bb0000;
+}
+
+.buttons {
+  position: fixed;
+  left: 0;
+  top: 0;
+  padding: 10px;
 }
 
 #info {
