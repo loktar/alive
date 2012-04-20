@@ -12,9 +12,8 @@
       this.info = new Alive.views.Info({model: this.historicalData});
       this.info.render();
 
-//      this.world = new Alive.views.World({collection: this.tiles}).render();
-      this.world = new Alive.views.ThreeDeeWorld({collection: this.tiles});
-      document.body.appendChild(this.world.el);
+      this.router = new Alive.Router();
+      Backbone.history.start({pushState: true});
 
       this.refresher = new Alive.views.Refresher({collection: this.tiles, el: $('#auto_toggle')});
     }

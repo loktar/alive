@@ -1,14 +1,16 @@
 Alive::Application.routes.draw do
 
-  resources :tiles, only: :index do
-    get :'3d', on: :collection
-    get :crash_test, on: :collection
-  end
-  resources :worlds do
-    get :current, on: :collection
+  resources :worlds, :only => :create do
+    collection do
+      get :current
+    end
   end
 
   resources :entities, only: :destroy
+
+  match '2d' => 'worlds#2d'
+  match '3d' => 'worlds#3d'
+  root :to => redirect('/2d')
 
   # The priority is based upon order of creation:
   # first created -> highest priority.

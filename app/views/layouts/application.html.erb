@@ -8,7 +8,42 @@
 </head>
 <body>
 
+<div class="buttons">
+  <button id="auto_toggle">Start</button>
+
+  <button id="create_world">Create World</button>
+  <%= link_to '2d', '/2d' %>
+  <%= link_to '3d', '/3d' %>
+</div>
+
+<div id="info">
+  <h1>Info</h1>
+  <ol>
+    <li>Plants: <span id="plant_count"></span></li>
+    <li>Herbivores: <span id="herbivore_count"></span></li>
+    <li>Carnivores: <span id="carnivore_count"></span></li>
+  </ol>
+
+  <div id="graph"></div>
+
+</div>
+
+<div id="world"></div>
+
 <%= yield %>
+
+<%= javascript_tag do %>
+  $(function() {
+    Alive.init();
+
+    $('#create_world').click(function(){
+      $.ajax({
+        url:'/worlds',
+        type:'post',
+      });
+    });
+  });
+<% end %>
 
 </body>
 </html>
