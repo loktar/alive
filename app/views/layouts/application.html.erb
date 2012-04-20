@@ -34,7 +34,7 @@
 
 <%= javascript_tag do %>
   $(function() {
-    Alive.init();
+    Alive.init(<%= World.instance.to_json.html_safe %>);
 
     $('#create_world').click(function(){
       $.ajax({

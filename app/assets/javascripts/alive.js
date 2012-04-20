@@ -4,7 +4,7 @@
     collections: {},
     templates: {},
     views: {},
-    init: function () {
+    init: function (initialWorld) {
       this.allLife = new Alive.collections.AllLife();
       this.tiles = new Alive.collections.Tiles();
 
@@ -14,6 +14,7 @@
 
       this.router = new Alive.Router();
       Backbone.history.start({pushState: true});
+      this.tiles.reset(initialWorld.tiles);
 
       this.refresher = new Alive.views.Refresher({collection: this.tiles, el: $('#auto_toggle')});
     }
