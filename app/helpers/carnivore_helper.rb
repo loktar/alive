@@ -3,6 +3,7 @@ module CarnivoreHelper
   CHANCE_TO_SPAWN_CARNIVORE = 0.2
 
   def self.eat_with_tile(tile)
+    grow_old_with_tile(tile)
     starve_with_tile(tile)
     consume_food_with_tile(tile)
     reproduce_with_tile(tile)
