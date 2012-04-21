@@ -34,9 +34,9 @@ class Tile
 
   def life_amount=(value)
     desired_number_of_plants = (value / LIFE_PER_PLANT).floor
-    add_or_remove_random_points(plants, desired_number_of_plants, @remaining_life_points) {
-      Plant.new(available_point(@remaining_life_points))
-    }
+    add_or_remove_random_points(plants, desired_number_of_plants, @remaining_life_points) do |point|
+      Plant.new(point)
+    end
 
     life_amount
   end
@@ -46,8 +46,8 @@ class Tile
   end
 
   def herbivore_count=(value)
-    add_or_remove_random_points(herbivores, value, @remaining_creature_points) do
-      Herbivore.new(available_point(@remaining_creature_points))
+    add_or_remove_random_points(herbivores, value, @remaining_creature_points) do |point|
+      Herbivore.new(point)
     end
     herbivore_count
   end
@@ -57,8 +57,8 @@ class Tile
   end
 
   def carnivore_count=(value)
-    add_or_remove_random_points(carnivores, value, @remaining_creature_points) do
-      Carnivore.new(available_point(@remaining_creature_points))
+    add_or_remove_random_points(carnivores, value, @remaining_creature_points) do |point|
+      Carnivore.new(point)
     end
     carnivore_count
   end
@@ -70,11 +70,23 @@ class Tile
   def add_or_remove_random_points(array, desired_count, remaining_points, *block)
     delta = desired_count - array.count
     if delta > 0
-      (0...delta).each { array << yield }
+      (0...delta).each do
+        life = yield(available_point(remaining_points))
+        left_point = [life.x - life.width, 0].max
+        top_point = [life.y - life.height, 0].max
+        right_point = [life.x + life.width - 1, WIDTH].min
+        bottom_point = [life.y + life.height - 1, HEIGHT].min
+        box = { top: top_point, right: right_point, bottom: bottom_point, left: left_point }
+
+        life.overlapped_points = remaining_points.select { |point| point.in_box?(box) }
+        remaining_points.reject! { |point| point.in_box?(box) }
+
+        array << life
+      end
     else
       (0...delta.abs).each do
         old = array.shift
-        remaining_points << { x: old.x, y: old.y }
+        remaining_points.concat(old.overlapped_points)
       end
     end
   end

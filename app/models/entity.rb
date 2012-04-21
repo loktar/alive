@@ -8,21 +8,28 @@ class Entity
   end
 
   attr_accessor :id,
-                :x, :y
+    :x, :y,
+    :width, :height,
+    :overlapped_points
 
-  def initialize(attrs={})
+  def initialize(attrs={ })
     @id = self.class.next_id
     @x = attrs[:x]
     @y = attrs[:y]
+    @width = 2
+    @height = 2
+    @overlapped_points = []
   end
 
-  def as_json(options = {})
+  def as_json(options = { })
     {
-            id: id,
-            x: x,
-            y: y,
-            lifeType: self.class.name.downcase,
-            isOld: old?
+      id: id,
+      x: x,
+      y: y,
+      width: width,
+      height: height,
+      lifeType: self.class.name.downcase,
+      isOld: old?
     }
   end
 
