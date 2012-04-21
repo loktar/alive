@@ -1,3 +1,3 @@
 <% _(lives).each(function (life) { %>
-  <div class="entity <%= life.lifeType %> <%= life.isOld ? 'old' : '' %>" style="top:<%= life.y * size %>px; left:<%= life.x * size %>px" data-entity="<%= life.id %>" id="entity-<%= life.id %>"></div>
+  <div class="entity <%= life.lifeType %> <%= life.isOld ? 'old' : '' %>" style="top:<%= life.y * xMultiple %>px; left:<%= life.x * yMultiple %>px" data-entity="<%= life.id %>" id="entity-<%= life.id %>"></div>
 <% }); %>

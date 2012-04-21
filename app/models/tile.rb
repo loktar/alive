@@ -1,8 +1,10 @@
 class Tile
-  LIFE_PER_PLANT = 0.04
-  POSSIBLE_POINTS = (0..20).map do |x|
-    (0..20).map do |y|
-      {x: x / 20.0, y: y / 20.0}
+  LIFE_PER_PLANT = 0.05
+  WIDTH = 20
+  HEIGHT = WIDTH
+  POSSIBLE_POINTS = (0..WIDTH).map do |x|
+    (0..HEIGHT).map do |y|
+      Point.new({ x: x, y: y })
     end
   end.flatten
 
@@ -85,6 +87,8 @@ class Tile
     {
       x: x,
       y: y,
+      width: WIDTH,
+      height: HEIGHT,
       plants: plants,
       herbivores: herbivores,
       carnivores: carnivores,

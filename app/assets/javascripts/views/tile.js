@@ -10,7 +10,8 @@
 
     render: function () {
       this.$el.html(this.template({
-        size: this.tileSize,
+        xMultiple: this.tileSize / this.model.get('width'),
+        yMultiple: this.tileSize / this.model.get('height'),
         lives: this.model.collection.toJSON()
       }));
 

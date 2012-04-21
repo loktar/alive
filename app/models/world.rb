@@ -78,10 +78,10 @@ class World
 
   def spread_life_to_adjacent_tile(tile, original_tile_life)
     if original_tile_life > 0.9
-      if !tile.has_life?
-        tile.life_amount = 0.1
-      else
+      if tile.has_life?
         update_life_on_living_tile(tile)
+      else
+        tile.life_amount = 0.1
       end
     elsif original_tile_life > 0.5
       tile.life_amount = [tile.life_amount + life_amount_with_probability(0.2), 1].min
