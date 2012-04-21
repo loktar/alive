@@ -1,10 +1,10 @@
 module HerbivoreHelper
-  HERBIVORE_MEAL_SIZE = 0.01
+  HERBIVORE_MEAL_SIZE = 0.02
 
   def self.eat_with_tile(tile)
-    grow_old_with_tile(tile)
     starve_with_tile(tile)
     consume_food_with_tile(tile)
+    grow_old_with_tile(tile)
     reproduce_with_tile(tile)
   end
 
@@ -36,8 +36,12 @@ module HerbivoreHelper
 
   def self.reproduce_with_tile(tile)
     #puts "life amount: #{tile.life_amount}"
-    if tile.life_amount > 0.5 && Random.rand < 0.3
-      tile.herbivore_count = tile.herbivore_count + 1
+    if tile.life_amount > 0.5
+      if tile.herbivore_count < 4 && Random.rand < 0.3
+        tile.herbivore_count = tile.herbivore_count + 1
+      else
+        tile.herbivore_count = tile.herbivore_count + Random.rand(tile.herbivore_count / 2)
+      end
       #puts "new herbivore count: #{tile.herbivore_count}"
     else
       #puts "not adding herbivores"
