@@ -57,11 +57,11 @@ class World
     foo = all_tiles
     foo.each do |tile|
       if tile.has_life?
-        update_life_on_living_tile(tile)
-
         tile.adjacent_tiles.each do |adjacent_tile|
-          spread_life_to_adjacent_tile(adjacent_tile)
+          spread_life_to_adjacent_tile(adjacent_tile, tile.life_amount)
         end
+
+        update_life_on_living_tile(tile)
       end
       HerbivoreHelper.eat_with_tile(tile)
       CarnivoreHelper.eat_with_tile(tile)
@@ -76,8 +76,16 @@ class World
     tile.life_amount = [tile.life_amount + 0.1, 1].min
   end
 
-  def spread_life_to_adjacent_tile(tile)
-    unless tile.has_life?
+  def spread_life_to_adjacent_tile(tile, original_tile_life)
+    if original_tile_life > 0.9
+      if !tile.has_life?
+        tile.life_amount = 0.1
+      else
+        update_life_on_living_tile(tile)
+      end
+    elsif original_tile_life > 0.5
+      tile.life_amount = [tile.life_amount + life_amount_with_probability(0.2), 1].min
+    elsif !tile.has_life?
       tile.life_amount = life_amount_with_probability(0.1)
     end
   end
