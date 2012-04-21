@@ -3,10 +3,10 @@
     tileSize: 50,
     className: 'world',
 
-    events: {
-      'click .entity': 'killEntity',
-      'mouseover .entity': 'killEntity'
-    },
+//    events: {
+//      'click .entity': 'killEntity',
+//      'mouseover .entity': 'killEntity'
+//    },
 
     initialize: function () {
       this.collection.on('reset', this.render, this);
