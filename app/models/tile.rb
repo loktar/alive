@@ -1,6 +1,6 @@
 class Tile
   LIFE_PER_PLANT = 0.04
-  AVAILABLE_POINTS = (0..20).map do |x|
+  POSSIBLE_POINTS = (0..20).map do |x|
     (0..20).map do |y|
       {x: x / 20.0, y: y / 20.0}
     end
@@ -16,6 +16,8 @@ class Tile
     self.plants = []
     self.herbivores = []
     self.carnivores = []
+    @remaining_life_points = POSSIBLE_POINTS.dup
+    @remaining_creature_points = POSSIBLE_POINTS.dup
   end
 
   def has_life?
@@ -30,8 +32,8 @@ class Tile
 
   def life_amount=(value)
     desired_number_of_plants = (value / LIFE_PER_PLANT).floor
-    add_or_remove_random_points(plants, desired_number_of_plants) {
-      Plant.new(available_point(plants))
+    add_or_remove_random_points(plants, desired_number_of_plants, @remaining_life_points) {
+      Plant.new(available_point(@remaining_life_points))
     }
 
     life_amount
@@ -42,9 +44,9 @@ class Tile
   end
 
   def herbivore_count=(value)
-    add_or_remove_random_points(herbivores, value) {
-      Herbivore.new(available_point(herbivores))
-    }
+    add_or_remove_random_points(herbivores, value, @remaining_creature_points) do
+      Herbivore.new(available_point(@remaining_creature_points))
+    end
     herbivore_count
   end
 
@@ -53,9 +55,9 @@ class Tile
   end
 
   def carnivore_count=(value)
-    add_or_remove_random_points(carnivores, value) {
-      Carnivore.new(available_point(carnivores))
-    }
+    add_or_remove_random_points(carnivores, value, @remaining_creature_points) do
+      Carnivore.new(available_point(@remaining_creature_points))
+    end
     carnivore_count
   end
 
@@ -63,12 +65,15 @@ class Tile
     carnivores.count
   end
 
-  def add_or_remove_random_points(array, desired_count, *block)
+  def add_or_remove_random_points(array, desired_count, remaining_points, *block)
     delta = desired_count - array.count
     if delta > 0
       (0...delta).each { array << yield }
     else
-      (0...delta.abs).each { array.shift }
+      (0...delta.abs).each do
+        old = array.shift
+        remaining_points << { x: old.x, y: old.y }
+      end
     end
   end
 
@@ -93,9 +98,8 @@ class Tile
   private
 
   def available_point(array)
-    filled_points = array.map { |point| { x: point.x, y: point.y } }
-    unfilled_points = AVAILABLE_POINTS.reject { |point| filled_points.include? point }
+    index = Random.rand(array.size)
 
-    unfilled_points[Random.rand(unfilled_points.count)]
+    array.delete_at(index)
   end
 end

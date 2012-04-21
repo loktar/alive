@@ -1,5 +1,5 @@
 module HerbivoreHelper
-  HERBIVORE_MEAL_SIZE = 0.05
+  HERBIVORE_MEAL_SIZE = 0.01
 
   def self.eat_with_tile(tile)
     grow_old_with_tile(tile)
