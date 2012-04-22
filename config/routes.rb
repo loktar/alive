@@ -3,6 +3,7 @@ Alive::Application.routes.draw do
   resources :worlds, :only => :create do
     collection do
       get :current
+      get :crash_test
     end
   end
 
