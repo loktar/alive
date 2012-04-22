@@ -32,7 +32,8 @@
       if (this.isStarted) {
         $.ajax({
           url: '/worlds/current.json'
-        }).done(_.bind(this.updateWorld, this));
+        }).done(_.bind(this.updateWorld, this))
+          .fail(_.bind(this.stopAutoRefresh, this));
       }
     },
 
