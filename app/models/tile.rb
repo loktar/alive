@@ -71,30 +71,6 @@ class Tile
     carnivores.count
   end
 
-  def add_or_remove_random_points(array, desired_count, remaining_points, *block)
-    delta = desired_count - array.count
-    if delta > 0
-      (0...delta).each do
-        life = yield(available_point(remaining_points))
-        left_point = [life.x - life.width, 0].max
-        top_point = [life.y - life.height, 0].max
-        right_point = [life.x + life.width - 1, WIDTH].min
-        bottom_point = [life.y + life.height - 1, HEIGHT].min
-        box = { top: top_point, right: right_point, bottom: bottom_point, left: left_point }
-
-        life.overlapped_points = remaining_points.select { |point| point.in_box?(box) }
-        remaining_points.reject! { |point| point.in_box?(box) }
-
-        array << life
-      end
-    else
-      (0...delta.abs).each do
-        old = array.shift
-        remaining_points.concat(old.overlapped_points)
-      end
-    end
-  end
-
   def adjacent_tiles
     [left_tile, right_tile, bottom_tile, top_tile].compact
   end
