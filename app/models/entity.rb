@@ -16,17 +16,16 @@ class Entity
     @id = self.class.next_id
     @x = attrs[:x]
     @y = attrs[:y]
-    @width = 2
-    @height = 2
+    @width = @height = 2
     @overlapped_points = []
   end
 
-  def bounding_box(tile_width, tile_height)
+  def bounding_box
     {
-      top: [(y - height) + 1, 0].max,
-      right: [x + width, tile_width].min,
-      bottom: [y + height, tile_height].min,
-      left: [(x - width) + 1, 0].max
+      top: y,
+      right: x + width,
+      bottom: y + height,
+      left: x
     }
   end
 

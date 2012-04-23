@@ -96,7 +96,7 @@ class Tile
   def available_point(array)
     index = Random.rand(array.size)
 
-    array.delete_at(index)
+    array[index]
   end
 
   def seed_plants
@@ -108,7 +108,7 @@ class Tile
     if delta > 0
       (0...delta).each do
         life = yield(available_point(remaining_points))
-        box = life.bounding_box(WIDTH, HEIGHT)
+        box = life.bounding_box
 
         life.overlapped_points = remaining_points.select { |point| point.in_box?(box) }
         remaining_points.reject! { |point| point.in_box?(box) }
