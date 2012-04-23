@@ -107,8 +107,12 @@ class Tile
     delta = desired_count - array.count
     if delta > 0
       (0...delta).each do
-        life = yield(available_point(remaining_points))
-        box = life.bounding_box
+        life = nil
+        box = nil
+        begin
+          life = yield(available_point(remaining_points))
+          box = life.bounding_box
+        end while array.any? { |entity| entity.collides_with?(box) }
 
         life.overlapped_points = remaining_points.select { |point| point.in_box?(box) }
         remaining_points.reject! { |point| point.in_box?(box) }

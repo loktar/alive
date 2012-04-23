@@ -29,6 +29,19 @@ class Entity
     }
   end
 
+  def collides_with?(other_box)
+    corners.any? { |corner| corner.in_box?(other_box) }
+  end
+
+  def corners
+    [
+      Point.new({ x: x, y: y }),
+      Point.new({ x: x + width, y: y }),
+      Point.new({ x: x, y: y + height }),
+      Point.new({ x: x + width, y: y + height })
+    ]
+  end
+
   def as_json(options = { })
     {
       id: id,
