@@ -124,7 +124,7 @@ class Tile
   end
 
   def seed_plants
-    self.plant_count = Random.rand < 0.3 ? Random.rand(12) : 0
+    self.life_amount = Random.rand < 0.3 ? Random.rand(0.6) : 0
   end
 
   def add_or_remove_random_points(array, desired_count, remaining_points)
