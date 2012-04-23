@@ -21,6 +21,15 @@ class Entity
     @overlapped_points = []
   end
 
+  def bounding_box(tile_width, tile_height)
+    {
+      top: [(y - height) + 1, 0].max,
+      right: [x + width, tile_width].min,
+      bottom: [y + height, tile_height].min,
+      left: [(x - width) + 1, 0].max
+    }
+  end
+
   def as_json(options = { })
     {
       id: id,

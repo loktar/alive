@@ -26,10 +26,7 @@ class World
       row = []
       rows << row
       (0...WORLD_SIZE).each do |x|
-        tile = Tile.new
-        tile.x = x
-        tile.y = y
-        tile.life_amount = starting_life_amount_for_tile
+        tile = Tile.new({x: x, y: y})
 
         row << tile
       end
@@ -54,8 +51,7 @@ class World
   end
 
   def update_life
-    foo = all_tiles
-    foo.each do |tile|
+    all_tiles.each do |tile|
       if tile.has_life?
         tile.adjacent_tiles.each do |adjacent_tile|
           spread_life_to_adjacent_tile(adjacent_tile, tile.life_amount)

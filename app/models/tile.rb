@@ -14,12 +14,16 @@ class Tile
     :carnivores,
     :left_tile, :top_tile, :right_tile, :bottom_tile
 
-  def initialize
+  def initialize(attrs={ })
     self.plants = []
     self.herbivores = []
     self.carnivores = []
+    self.x = attrs[:x]
+    self.y = attrs[:y]
     @remaining_life_points = POSSIBLE_POINTS.dup
     @remaining_creature_points = POSSIBLE_POINTS.dup
+
+    seed_plants
   end
 
   def has_life?
@@ -108,7 +112,7 @@ class Tile
   end
 
   def to_s
-    "#<#{self.class}:#{object_id} x:#{x} y:#{y} life_amount:#{life_amount}>"
+    inspect
   end
 
   private
@@ -117,5 +121,29 @@ class Tile
     index = Random.rand(array.size)
 
     array.delete_at(index)
+  end
+
+  def seed_plants
+    self.plant_count = Random.rand < 0.3 ? Random.rand(12) : 0
+  end
+
+  def add_or_remove_random_points(array, desired_count, remaining_points)
+    delta = desired_count - array.count
+    if delta > 0
+      (0...delta).each do
+        life = yield(available_point(remaining_points))
+        box = life.bounding_box(WIDTH, HEIGHT)
+
+        life.overlapped_points = remaining_points.select { |point| point.in_box?(box) }
+        remaining_points.reject! { |point| point.in_box?(box) }
+
+        array << life
+      end
+    else
+      (0...delta.abs).each do
+        old = array.shift
+        remaining_points.concat(old.overlapped_points)
+      end
+    end
   end
 end
