@@ -1,6 +1,8 @@
 (function (app) {
 
   app.views.Refresher = Backbone.View.extend({
+    refreshTimeout: 2000,
+
     events: {
       'click': 'toggleAutoRefresh'
     },
@@ -42,7 +44,7 @@
       var self = this;
       setTimeout(function () {
         self.fetchNewTiles();
-      }, 2000);
+      }, self.refreshTimeout);
     }
   });
 
