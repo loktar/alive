@@ -1,5 +1,6 @@
 class Tile
   LIFE_PER_PLANT = 0.05
+  MAXIMUM_PLANTS = 1 / LIFE_PER_PLANT
   WIDTH = 20
   HEIGHT = WIDTH
   POSSIBLE_POINTS = (0..WIDTH).map do |x|
@@ -27,7 +28,7 @@ class Tile
   end
 
   def has_life?
-    self.life_amount > 0
+    self.plant_density > 0
   end
 
   def kill_entity_by_id(entity_id)
@@ -36,17 +37,26 @@ class Tile
     carnivores.delete_if { |e| e.id == entity_id }
   end
 
-  def life_amount=(value)
-    desired_number_of_plants = (value / LIFE_PER_PLANT).floor
-    add_or_remove_random_points(plants, desired_number_of_plants, @remaining_life_points) do |point|
+  def grow_and_spread
+    adjacent_tiles.each { |tile| spread_life_to_adjacent_tile(tile) }
+
+    grow
+  end
+
+  def plant_density
+    plant_count * LIFE_PER_PLANT
+  end
+
+  def plant_count=(value)
+    add_or_remove_random_points(plants, value.floor, @remaining_life_points) do |point|
       Plant.new(point)
     end
 
-    life_amount
+    plant_count
   end
 
-  def life_amount
-    plants.count * LIFE_PER_PLANT
+  def plant_count
+    plants.count
   end
 
   def herbivore_count=(value)
@@ -91,6 +101,12 @@ class Tile
     inspect
   end
 
+  protected
+
+  def grow
+    self.plant_count = [plant_count + 2, MAXIMUM_PLANTS].min
+  end
+
   private
 
   def available_point(array)
@@ -100,7 +116,7 @@ class Tile
   end
 
   def seed_plants
-    self.life_amount = Random.rand < 0.3 ? Random.rand(0.6) : 0
+    self.plant_count = Random.rand < 0.3 ? Random.rand(12) : 0
   end
 
   def add_or_remove_random_points(array, desired_count, remaining_points)
@@ -125,5 +141,23 @@ class Tile
         remaining_points.concat(old.overlapped_points)
       end
     end
+  end
+
+  def spread_life_to_adjacent_tile(tile)
+    if plant_density > 0.9
+      if tile.has_life?
+        tile.grow
+      else
+        tile.plant_count = 2
+      end
+    elsif plant_density > 0.5
+      tile.plant_count = [tile.plant_count + plant_count_with_probability(0.2), MAXIMUM_PLANTS].min
+    elsif !tile.has_life?
+      tile.plant_count = plant_count_with_probability(0.1)
+    end
+  end
+
+  def plant_count_with_probability(probability)
+    (Random.rand < probability) ? 2 : 0
   end
 end

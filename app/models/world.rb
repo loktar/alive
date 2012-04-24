@@ -46,43 +46,14 @@ class World
     end
   end
 
-  def life_amount_with_probability(probability)
-    (Random.rand <= probability) ? 0.1 : 0
-  end
-
   def update_life
     all_tiles.each do |tile|
       if tile.has_life?
-        tile.adjacent_tiles.each do |adjacent_tile|
-          spread_life_to_adjacent_tile(adjacent_tile, tile.life_amount)
-        end
-
-        update_life_on_living_tile(tile)
+        tile.grow_and_spread
       end
+
       HerbivoreHelper.eat_with_tile(tile)
       CarnivoreHelper.eat_with_tile(tile)
-    end
-  end
-
-  def starting_life_amount_for_tile
-    Random.rand < 0.3 ? Random.rand(0.6) : 0
-  end
-
-  def update_life_on_living_tile(tile)
-    tile.life_amount = [tile.life_amount + 0.1, 1].min
-  end
-
-  def spread_life_to_adjacent_tile(tile, original_tile_life)
-    if original_tile_life > 0.9
-      if tile.has_life?
-        update_life_on_living_tile(tile)
-      else
-        tile.life_amount = 0.1
-      end
-    elsif original_tile_life > 0.5
-      tile.life_amount = [tile.life_amount + life_amount_with_probability(0.2), 1].min
-    elsif !tile.has_life?
-      tile.life_amount = life_amount_with_probability(0.1)
     end
   end
 
@@ -104,10 +75,6 @@ class World
 
   def carnivore_count
     all_tiles.map { |tile| tile.carnivore_count }.inject { |a, b| a + b }
-  end
-
-  def total_life
-    all_tiles.map { |tile| tile.life_amount }.inject { |a, b| a + b }
   end
 
   def to_s

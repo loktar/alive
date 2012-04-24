@@ -1,5 +1,5 @@
 module HerbivoreHelper
-  HERBIVORE_MEAL_SIZE = 0.02
+  HERBIVORE_MEAL_SIZE = 0.4
 
   def self.eat_with_tile(tile)
     starve_with_tile(tile)
@@ -19,8 +19,8 @@ module HerbivoreHelper
   def self.starve_with_tile(tile)
     desired_food = tile.herbivore_count * HERBIVORE_MEAL_SIZE
     #puts "herbivores want to eat #{desired_food} and there are #{tile.herbivore_count} of them"
-    if tile.life_amount < desired_food
-      food_deficit = desired_food - tile.life_amount
+    if tile.plant_count < desired_food
+      food_deficit = desired_food - tile.plant_count
       animals_to_starve = (1.0 * food_deficit / HERBIVORE_MEAL_SIZE).floor
       #puts "#{animals_to_starve} will starve"
       tile.herbivore_count = [tile.herbivore_count - animals_to_starve, 0].max
@@ -28,15 +28,11 @@ module HerbivoreHelper
   end
 
   def self.consume_food_with_tile(tile)
-    old = tile.life_amount
-    tile.life_amount = [tile.life_amount - (tile.herbivore_count * HERBIVORE_MEAL_SIZE), 0].max
-
-    #puts "Consume from #{old} to #{tile.life_amount}"
+    tile.plant_count = [tile.plant_count - (tile.herbivore_count * HERBIVORE_MEAL_SIZE), 0].max
   end
 
   def self.reproduce_with_tile(tile)
-    #puts "life amount: #{tile.life_amount}"
-    if tile.life_amount > 0.5
+    if tile.plant_density > 0.5
       if tile.herbivore_count < 4 && Random.rand < 0.3
         tile.herbivore_count = tile.herbivore_count + 1
       else
