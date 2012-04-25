@@ -85,6 +85,14 @@ class Tile
     [left_tile, right_tile, bottom_tile, top_tile].compact
   end
 
+  def available_food_for(animal_class)
+    send("#{animal_class.food_type}_count") * animal_class.meal_size
+  end
+
+  def desired_food_for(animal_class)
+    send("#{animal_class.name.downcase}s").select(&:hungry?).count * animal_class.meal_size
+  end
+
   def as_json(options={ })
     {
       x: x,

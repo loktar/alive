@@ -1,5 +1,4 @@
 module CarnivoreHelper
-  CARNIVORE_MEAL_SIZE = 1
   CHANCE_TO_SPAWN_CARNIVORE = 0.2
 
   def self.eat_with_tile(tile)
@@ -18,12 +17,12 @@ module CarnivoreHelper
   end
 
   def self.starve_with_tile(tile)
-    desired_food = desired_food_for_tile(tile)
-    available_food = available_food_for_tile(tile)
+    desired_food = tile.desired_food_for(Carnivore)
+    available_food = tile.available_food_for(Carnivore)
     #puts "carnivores want to eat #{desired_food} and there is #{available_food} available from #{tile.herbivore_count} herbivores"
     if available_food < desired_food
       food_deficit = desired_food - available_food
-      animals_to_starve = (1.0 * food_deficit / CARNIVORE_MEAL_SIZE).floor
+      animals_to_starve = (1.0 * food_deficit / Carnivore.meal_size).floor
       #puts "#{animals_to_starve} carnivores will starve"
       tile.carnivore_count = [tile.carnivore_count - animals_to_starve, 0].max
     end
@@ -31,7 +30,7 @@ module CarnivoreHelper
 
   def self.consume_food_with_tile(tile)
     old = tile.herbivore_count
-    tile.herbivore_count = [tile.herbivore_count - desired_food_for_tile(tile), 0].max
+    tile.herbivore_count = [tile.herbivore_count - tile.desired_food_for(Carnivore), 0].max
 
     tile.carnivores.each { |c| c.eat }
     #puts "Consume herbivores from #{old} to #{tile.herbivore_count}"
@@ -42,17 +41,4 @@ module CarnivoreHelper
       tile.carnivore_count = tile.carnivore_count + 1
     end
   end
-
-  def self.desired_food_for_tile(tile)
-    hungry_carnivores_for_tile(tile) * CARNIVORE_MEAL_SIZE
-  end
-
-  def self.hungry_carnivores_for_tile(tile)
-    tile.carnivores.select { |c| c.hungry? }.count
-  end
-
-  def self.available_food_for_tile(tile)
-    tile.herbivore_count * CARNIVORE_MEAL_SIZE
-  end
-
 end
