@@ -1,4 +1,6 @@
 class Tile
+  include Food
+
   LIFE_PER_PLANT = 0.05
   MAXIMUM_PLANTS = 1 / LIFE_PER_PLANT
   WIDTH = 20
@@ -85,12 +87,9 @@ class Tile
     [left_tile, right_tile, bottom_tile, top_tile].compact
   end
 
-  def available_food_for(animal_class)
-    send("#{animal_class.food_type}_count") * animal_class.meal_size
-  end
-
-  def desired_food_for(animal_class)
-    send("#{animal_class.name.downcase}s").select(&:hungry?).count * animal_class.meal_size
+  def grow_older(animal_class)
+    ids_to_kill = send("#{animal_class.name.downcase}s").select(&:grow_older_and_die).map(&:id)
+    ids_to_kill.each { |animal_id| kill_entity_by_id(animal_id) }
   end
 
   def as_json(options={ })
