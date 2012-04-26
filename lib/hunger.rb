@@ -12,7 +12,7 @@ module Hunger
   end
 
   def hungry?
-    hunger_count >= self.class.class_variable_get(:@@turns_until_hungry)
+    hunger_count >= self.class.class_variable_get(:@@turns_before_hungry)
   end
 
   def hunger_count
@@ -21,7 +21,7 @@ module Hunger
 
   module ClassMethods
     def eats(options={})
-      self.class_variable_set(:@@turns_until_hungry, options[:turns_until_hungry] || 0)
+      self.class_variable_set(:@@turns_before_hungry, options[:turns_before_hungry] || 0)
       self.class_variable_set(:@@meal_size, options[:meal_size] || 1)
 
       food_type = options[:food_type].to_sym
