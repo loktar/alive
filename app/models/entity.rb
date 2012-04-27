@@ -10,22 +10,26 @@ class Entity
   attr_accessor :id,
     :x, :y,
     :width, :height,
-    :overlapped_points
+    :overlapped_points,
+    :tile
 
   def initialize(attrs={ })
     @id = self.class.next_id
     @x = attrs[:x]
     @y = attrs[:y]
+    @tile = attrs[:tile]
     @width = @height = 2
     @overlapped_points = []
   end
 
-  def bounding_box
+  def bounding_box(point=nil)
+    the_x = point.try(:x) || x
+    the_y = point.try(:y) || y
     {
-      top: y,
-      right: x + width,
-      bottom: y + height,
-      left: x
+      top: the_y,
+      right: the_x + width,
+      bottom: the_y + height,
+      left: the_x
     }
   end
 

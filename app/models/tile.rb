@@ -51,7 +51,7 @@ class Tile
 
   def plant_count=(value)
     add_or_remove_random_points(plants, value.floor, @remaining_life_points) do |point|
-      Plant.new(point)
+      Plant.new(point.merge(tile: self))
     end
 
     plant_count
@@ -63,7 +63,7 @@ class Tile
 
   def herbivore_count=(value)
     add_or_remove_random_points(herbivores, value, @remaining_creature_points) do |point|
-      Herbivore.new(point)
+      Herbivore.new(point.merge(tile: self))
     end
     herbivore_count
   end
@@ -74,7 +74,7 @@ class Tile
 
   def carnivore_count=(value)
     add_or_remove_random_points(carnivores, value, @remaining_creature_points) do |point|
-      Carnivore.new(point)
+      Carnivore.new(point.merge(tile: self))
     end
     carnivore_count
   end
@@ -92,20 +92,47 @@ class Tile
     ids_to_kill.each { |animal_id| kill_entity_by_id(animal_id) }
   end
 
+  def point_available_for(point, entity)
+    available_points = entity.is_a?(Plant) ? @remaining_life_points : @remaining_creature_points
+    (entity.overlapped_points.include?(point) || available_points.include?(point)) &&
+      animals_of_type(entity.class).none? { |ent| ent.collides_with?(entity.bounding_box(point)) }
+  end
+
   def as_json(options={ })
     {
       x: x,
       y: y,
-      width: WIDTH,
-      height: HEIGHT,
+      width: width,
+      height: height,
       plants: plants,
       herbivores: herbivores,
       carnivores: carnivores,
     }
   end
 
+  def width
+    WIDTH
+  end
+
+  def height
+    HEIGHT
+  end
+
   def to_s
     inspect
+  end
+
+  def move_entity(entity, new_location)
+    remaining_points = remaining_points_for(entity)
+    remaining_points.concat(entity.overlapped_points)
+
+    entity.x = new_location.x
+    entity.y = new_location.y
+    box = entity.bounding_box
+
+
+    entity.overlapped_points = remaining_points.select { |point| point.in_box?(box) }
+    remaining_points.reject! { |point| point.in_box?(box) }
   end
 
   protected
@@ -115,12 +142,6 @@ class Tile
   end
 
   private
-
-  def available_point(array)
-    index = Random.rand(array.size)
-
-    array[index]
-  end
 
   def seed_plants
     self.plant_count = Random.rand < 0.3 ? Random.rand(12) : 0
@@ -133,7 +154,7 @@ class Tile
         life = nil
         box = nil
         begin
-          life = yield(available_point(remaining_points))
+          life = yield(remaining_points.sample)
           box = life.bounding_box
         end while array.any? { |entity| entity.collides_with?(box) }
 
@@ -166,5 +187,17 @@ class Tile
 
   def plant_count_with_probability(probability)
     (Random.rand < probability) ? 2 : 0
+  end
+
+  def remaining_points_for(life_class)
+    unless life_class.is_a?(Class)
+      life_class = life_class.class
+    end
+
+    if life_class == Plant
+      @remaining_life_points
+    else
+      @remaining_creature_points
+    end
   end
 end

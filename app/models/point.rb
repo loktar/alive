@@ -12,4 +12,12 @@ class Point < Hash
     box[:left] >= self[:x] && box[:right] <= self[:x] &&
       box[:top] >= self[:y] && box[:bottom] <= self[:y]
   end
+
+  def x
+    self[:x]
+  end
+
+  def y
+    self[:y]
+  end
 end

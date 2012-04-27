@@ -4,6 +4,7 @@ module HerbivoreHelper
     tile.consume_food_for(Herbivore)
     tile.grow_older(Herbivore)
     reproduce_with_tile(tile)
+    move_with_tile(tile)
   end
 
   def self.reproduce_with_tile(tile)
@@ -14,5 +15,9 @@ module HerbivoreHelper
         tile.herbivore_count = tile.herbivore_count + Random.rand(tile.herbivore_count / 2)
       end
     end
+  end
+
+  def self.move_with_tile(tile)
+    tile.herbivores.each(&:move_within_tile)
   end
 end
