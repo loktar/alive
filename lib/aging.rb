@@ -1,6 +1,9 @@
 module Aging
   def self.included(base)
     base.extend(ClassMethods)
+    base.class_eval do
+      max_age 0
+    end
   end
 
   def age
