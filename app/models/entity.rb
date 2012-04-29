@@ -8,18 +8,25 @@ class Entity
   end
 
   attr_accessor :id,
-    :x, :y,
+    :point,
     :width, :height,
     :overlapped_points,
     :tile
 
   def initialize(attrs={ })
     @id = self.class.next_id
-    @x = attrs[:x]
-    @y = attrs[:y]
+    @point = attrs[:point]
     @tile = attrs[:tile]
     @width = @height = 2
     @overlapped_points = []
+  end
+
+  def x
+    point.x
+  end
+
+  def y
+    point.y
   end
 
   def bounding_box(point=nil)
@@ -34,16 +41,7 @@ class Entity
   end
 
   def collides_with?(other_box)
-    corners.any? { |corner| corner.in_box?(other_box) }
-  end
-
-  def corners
-    [
-      Point.new({ x: x, y: y }),
-      Point.new({ x: x + width, y: y }),
-      Point.new({ x: x, y: y + height }),
-      Point.new({ x: x + width, y: y + height })
-    ]
+    Collision.entity_collides_with_box?(self, other_box)
   end
 
   def as_json(options = { })

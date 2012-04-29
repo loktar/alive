@@ -51,7 +51,7 @@ class Tile
 
   def plant_count=(value)
     add_or_remove_random_points(plants, value.floor, @remaining_life_points) do |point|
-      Plant.new(point.merge(tile: self))
+      Plant.new(point: point, tile: self)
     end
 
     plant_count
@@ -63,7 +63,7 @@ class Tile
 
   def herbivore_count=(value)
     add_or_remove_random_points(herbivores, value, @remaining_creature_points) do |point|
-      Herbivore.new(point.merge(tile: self))
+      Herbivore.new(point: point, tile: self)
     end
     herbivore_count
   end
@@ -74,7 +74,7 @@ class Tile
 
   def carnivore_count=(value)
     add_or_remove_random_points(carnivores, value, @remaining_creature_points) do |point|
-      Carnivore.new(point.merge(tile: self))
+      Carnivore.new(point: point, tile: self)
     end
     carnivore_count
   end
@@ -126,13 +126,10 @@ class Tile
     remaining_points = remaining_points_for(entity)
     remaining_points.concat(entity.overlapped_points)
 
-    entity.x = new_location.x
-    entity.y = new_location.y
+    entity.point = new_location
     box = entity.bounding_box
 
-
-    entity.overlapped_points = remaining_points.select { |point| point.in_box?(box) }
-    remaining_points.reject! { |point| point.in_box?(box) }
+    update_remaining_points(box, entity, remaining_points)
   end
 
   protected
@@ -147,6 +144,13 @@ class Tile
     self.plant_count = Random.rand < 0.3 ? Random.rand(12) : 0
   end
 
+  def update_remaining_points(box, entity, remaining_points)
+    entity.overlapped_points = [entity.point]
+    remaining_points.reject! { |point| point == entity.point }
+    #entity.overlapped_points = remaining_points.select { |point| Collision.point_in_box?(point, box) }
+    #remaining_points.reject! { |point| Collision.point_in_box?(point, box) }
+  end
+
   def add_or_remove_random_points(array, desired_count, remaining_points)
     delta = desired_count - array.count
     if delta > 0
@@ -158,8 +162,7 @@ class Tile
           box = life.bounding_box
         end while array.any? { |entity| entity.collides_with?(box) }
 
-        life.overlapped_points = remaining_points.select { |point| point.in_box?(box) }
-        remaining_points.reject! { |point| point.in_box?(box) }
+        update_remaining_points(box, life, remaining_points)
 
         array << life
       end

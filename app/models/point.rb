@@ -9,8 +9,7 @@ class Point < Hash
   end
 
   def in_box?(box)
-    box[:left] >= self[:x] && box[:right] <= self[:x] &&
-      box[:top] >= self[:y] && box[:bottom] <= self[:y]
+    Collision.point_in_box?(self, box)
   end
 
   def x
