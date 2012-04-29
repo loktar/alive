@@ -35,5 +35,5 @@ Alive::Application.configure do
   # Expands the lines which load the assets
   config.assets.debug = true
 
-  config.middleware.use ::Rack::PerftoolsProfiler, :default_printer => 'pdf'
+  config.middleware.use ::Rack::PerftoolsProfiler, :default_printer => 'pdf', :bundler => true
 end

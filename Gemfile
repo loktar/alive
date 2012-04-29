@@ -23,7 +23,7 @@ end
 gem 'jquery-rails'
 
 group :development do
-  gem 'rack-perftools_profiler'
+  gem 'rack-perftools_profiler', :require => 'rack/perftools_profiler'
 end
 # To use ActiveModel has_secure_password
 # gem 'bcrypt-ruby', '~> 3.0.0'

@@ -14,6 +14,17 @@
   <button id="create_world">Create World</button>
   <%= link_to '2d', '/2d' %>
   <%= link_to '3d', '/3d' %>
+  <% if Rails.env.development? %>
+    <div class="profiling">
+      Start profiling:
+      <%= link_to 'CPU', '/__start__' %>
+      <%= link_to 'objects', '/__start__?method=objects' %>
+      <br/>
+      <%= link_to 'stop profiling', '/__stop__' %>
+      <br/>
+      <%= link_to 'show profiling data', '/__data__', :target => '_blank' %>
+    </div>
+  <% end %>
 </div>
 
 <div id="info">

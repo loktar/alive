@@ -17,6 +17,15 @@
       this.tiles.reset(initialWorld.tiles);
 
       this.refresher = new Alive.views.Refresher({collection: this.tiles, el: $('#auto_toggle')});
+
+      $('.profiling a').click(function (e) {
+        if (this.target === '_blank') {
+          return;
+        }
+
+        e.preventDefault();
+        $.ajax({url: this.href});
+      });
     }
   };
 }(jQuery));
