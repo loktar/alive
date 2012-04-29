@@ -8,7 +8,11 @@ class WorldsController < ApplicationController
   def current
     world = World.instance
     world.update_life
-    render json: world
+    if params[:profile] && params[:no_json]
+      head :ok
+    else
+      render json: world
+    end
   end
 
 end
