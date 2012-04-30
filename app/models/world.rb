@@ -52,8 +52,7 @@ class World
         tile.grow_and_spread
       end
 
-      HerbivoreHelper.eat_with_tile(tile)
-      CarnivoreHelper.eat_with_tile(tile)
+      tile.process_turn
     end
   end
 

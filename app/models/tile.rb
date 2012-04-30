@@ -1,6 +1,7 @@
 class Tile
   include Tiles::Food
   include Tiles::LifeManagement
+  animal_types [:herbivore, :carnivore]
 
   LIFE_PER_PLANT = 0.05
   MAXIMUM_PLANTS = 1 / LIFE_PER_PLANT

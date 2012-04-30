@@ -1,6 +1,7 @@
 module Tiles
   module LifeManagement
     def self.included(base)
+      base.extend(ClassMethods)
       %w(Plant Herbivore Carnivore).each do |life_class_name|
         list_accessor = "#{life_class_name.downcase}s"
         count_accessor = "#{life_class_name.downcase}_count"
@@ -31,6 +32,25 @@ module Tiles
 
     def set_life_count(life_class, new_count)
       send("#{life_class.name.downcase}_count=", new_count)
+    end
+
+    def process_turn
+      self.class.class_variable_get(:@@animal_types).each do |animal_type|
+        animal_class = animal_type.to_s.camelcase.constantize
+        if animal_class.respond_to?(:eats)
+          starve animal_class
+          consume_food_for animal_class
+        end
+        grow_older animal_class if animal_class.respond_to?(:max_age)
+        reproduce animal_class if animal_class.respond_to?(:reproduces)
+        life_of_type(animal_class).each(&:move_within_tile) if animal_class.respond_to?(:moves)
+      end
+    end
+
+    module ClassMethods
+      def animal_types(arr=nil)
+        self.class_variable_set(:@@animal_types, arr || [])
+      end
     end
 
     private
