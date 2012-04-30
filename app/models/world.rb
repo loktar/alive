@@ -47,13 +47,7 @@ class World
   end
 
   def update_life
-    all_tiles.each do |tile|
-      if tile.has_life?
-        tile.grow_and_spread
-      end
-
-      tile.process_turn
-    end
+    all_tiles.each(&:process_turn)
   end
 
   def all_tiles

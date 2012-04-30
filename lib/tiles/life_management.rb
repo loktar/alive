@@ -35,13 +35,17 @@ module Tiles
     end
 
     def process_turn
+      if has_life?
+        grow_and_spread
+      end
+
       self.class.class_variable_get(:@@animal_types).each do |animal_type|
         animal_class = animal_type.to_s.camelcase.constantize
         if animal_class.respond_to?(:eats)
           starve animal_class
           consume_food_for animal_class
         end
-        grow_older animal_class if animal_class.respond_to?(:max_age)
+        grow_older animal_class if animal_class.respond_to?(:ages)
         reproduce animal_class if animal_class.respond_to?(:reproduces)
         life_of_type(animal_class).each(&:move_within_tile) if animal_class.respond_to?(:moves)
       end

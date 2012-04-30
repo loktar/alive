@@ -88,7 +88,8 @@ class Tile
     if food_count_for(animal_class) > animal_class.minimum_food
       animal_count = life_of_type(animal_class).count
       if animal_class.add_one_until > 0 && animal_count >= animal_class.add_one_until
-        set_life_count(animal_class, animal_count + Random.rand(animal_count / 2))
+        old_enough_count = life_of_type(animal_class).select(&:can_reproduce?).count
+        set_life_count(animal_class, animal_count + Random.rand(old_enough_count / 2))
       elsif Random.rand < animal_class.chance_to_spawn
         set_life_count(animal_class, animal_count + 1)
       end
@@ -98,7 +99,7 @@ class Tile
   protected
 
   def grow
-    self.plant_count = [plant_count + 2, MAXIMUM_PLANTS].min
+    self.plant_count = [plant_count + 1, MAXIMUM_PLANTS].min
   end
 
   private
@@ -112,7 +113,7 @@ class Tile
       if tile.has_life?
         tile.grow
       else
-        tile.plant_count = 2
+        tile.plant_count = 1
       end
     elsif plant_density > 0.5
       tile.plant_count = [tile.plant_count + plant_count_with_probability(0.2), MAXIMUM_PLANTS].min
@@ -122,7 +123,7 @@ class Tile
   end
 
   def plant_count_with_probability(probability)
-    (Random.rand < probability) ? 2 : 0
+    (Random.rand < probability) ? 1 : 0
   end
 
   def possible_points

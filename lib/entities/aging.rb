@@ -3,7 +3,7 @@ module Entities
     def self.included(base)
       base.extend(ClassMethods)
       base.class_eval do
-        max_age 0
+        ages
       end
     end
 
@@ -29,8 +29,8 @@ module Entities
     end
 
     module ClassMethods
-      def max_age(age)
-        self.class_variable_set(:@@max_age, age)
+      def ages(options={})
+        self.class_variable_set(:@@max_age, options[:max_age] || 0)
       end
     end
   end
