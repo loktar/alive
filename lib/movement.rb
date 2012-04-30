@@ -30,8 +30,7 @@ module Movement
 
     index = Random.rand(width * height)
 
-    x_offset = index / width
-    y_offset = index % width
+    x_offset, y_offset = index.divmod height
 
     Point.new(x: left + x_offset, y: top + y_offset)
   end

@@ -23,8 +23,6 @@ class Tile
     self.carnivores = []
     self.x = attrs[:x]
     self.y = attrs[:y]
-    @remaining_life_points = POSSIBLE_POINTS.dup
-    @remaining_creature_points = POSSIBLE_POINTS.dup
 
     seed_plants
   end
@@ -50,7 +48,7 @@ class Tile
   end
 
   def plant_count=(value)
-    add_or_remove_random_points(plants, value.floor, @remaining_life_points) do |point|
+    add_or_remove_random_points(plants, value.floor) do |point|
       Plant.new(point: point, tile: self)
     end
 
@@ -62,7 +60,7 @@ class Tile
   end
 
   def herbivore_count=(value)
-    add_or_remove_random_points(herbivores, value, @remaining_creature_points) do |point|
+    add_or_remove_random_points(herbivores, value) do |point|
       Herbivore.new(point: point, tile: self)
     end
     herbivore_count
@@ -73,7 +71,7 @@ class Tile
   end
 
   def carnivore_count=(value)
-    add_or_remove_random_points(carnivores, value, @remaining_creature_points) do |point|
+    add_or_remove_random_points(carnivores, value) do |point|
       Carnivore.new(point: point, tile: self)
     end
     carnivore_count
@@ -93,9 +91,7 @@ class Tile
   end
 
   def point_available_for(point, entity)
-    available_points = entity.is_a?(Plant) ? @remaining_life_points : @remaining_creature_points
-    (entity.overlapped_points.include?(point) || available_points.include?(point)) &&
-      animals_of_type(entity.class).none? { |ent| ent.collides_with?(entity.bounding_box(point)) }
+    animals_of_type(entity.class).none? { |ent| ent.collides_with?(entity.bounding_box(point)) }
   end
 
   def as_json(options={ })
@@ -123,13 +119,7 @@ class Tile
   end
 
   def move_entity(entity, new_location)
-    remaining_points = remaining_points_for(entity)
-    remaining_points.concat(entity.overlapped_points)
-
     entity.point = new_location
-    box = entity.bounding_box
-
-    update_remaining_points(box, entity, remaining_points)
   end
 
   protected
@@ -144,33 +134,19 @@ class Tile
     self.plant_count = Random.rand < 0.3 ? Random.rand(12) : 0
   end
 
-  def update_remaining_points(box, entity, remaining_points)
-    entity.overlapped_points = [entity.point]
-    remaining_points.reject! { |point| point == entity.point }
-    #entity.overlapped_points = remaining_points.select { |point| Collision.point_in_box?(point, box) }
-    #remaining_points.reject! { |point| Collision.point_in_box?(point, box) }
-  end
-
-  def add_or_remove_random_points(array, desired_count, remaining_points)
+  def add_or_remove_random_points(array, desired_count)
     delta = desired_count - array.count
     if delta > 0
       (0...delta).each do
         life = nil
-        box = nil
         begin
-          life = yield(remaining_points.sample)
-          box = life.bounding_box
-        end while array.any? { |entity| entity.collides_with?(box) }
-
-        update_remaining_points(box, life, remaining_points)
+          life = yield(POSSIBLE_POINTS.sample)
+        end while array.any? { |entity| entity.collides_with?(life.bounding_box) }
 
         array << life
       end
     else
-      (0...delta.abs).each do
-        old = array.shift
-        remaining_points.concat(old.overlapped_points)
-      end
+      (0...delta.abs).each { array.shift }
     end
   end
 
@@ -190,17 +166,5 @@ class Tile
 
   def plant_count_with_probability(probability)
     (Random.rand < probability) ? 2 : 0
-  end
-
-  def remaining_points_for(life_class)
-    unless life_class.is_a?(Class)
-      life_class = life_class.class
-    end
-
-    if life_class == Plant
-      @remaining_life_points
-    else
-      @remaining_creature_points
-    end
   end
 end
