@@ -122,6 +122,17 @@ class Tile
     entity.point = new_location
   end
 
+  def reproduce(animal_class)
+    if food_count_for(animal_class) > animal_class.minimum_food
+      animal_count = animals_of_type(animal_class).count
+      if animal_class.add_one_until > 0 && animal_count >= animal_class.add_one_until
+        set_life_count(animal_class, animal_count + Random.rand(animal_count / 2))
+      elsif Random.rand < animal_class.chance_to_spawn
+        set_life_count(animal_class, animal_count + 1)
+      end
+    end
+  end
+
   protected
 
   def grow
@@ -129,6 +140,10 @@ class Tile
   end
 
   private
+
+  def set_life_count(animal_class, new_count)
+    send("#{animal_class.name.downcase}_count=", new_count)
+  end
 
   def seed_plants
     self.plant_count = Random.rand < 0.3 ? Random.rand(12) : 0

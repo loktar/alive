@@ -1,6 +1,6 @@
 module Food
   def available_food_for(animal_class)
-    send("#{animal_class.food_type}_count") * animal_class.meal_size
+    food_count_for(animal_class) * animal_class.meal_size
   end
 
   def desired_food_for(animal_class)
@@ -23,6 +23,10 @@ module Food
       count_attr = "#{animal_class.name.downcase}_count"
       send("#{count_attr}=", [send(count_attr) - animals_to_starve, 0].max)
     end
+  end
+
+  def food_count_for(animal_class)
+    send("#{animal_class.food_type}_count")
   end
 
   def animals_of_type(animal_class)
