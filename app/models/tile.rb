@@ -1,5 +1,6 @@
 class Tile
-  include Food
+  include Tiles::Food
+  include Tiles::LifeManagement
 
   LIFE_PER_PLANT = 0.05
   MAXIMUM_PLANTS = 1 / LIFE_PER_PLANT
@@ -12,15 +13,9 @@ class Tile
   end.flatten
 
   attr_accessor :x, :y,
-    :plants,
-    :herbivores,
-    :carnivores,
     :left_tile, :top_tile, :right_tile, :bottom_tile
 
   def initialize(attrs={ })
-    self.plants = []
-    self.herbivores = []
-    self.carnivores = []
     self.x = attrs[:x]
     self.y = attrs[:y]
 
@@ -47,40 +42,6 @@ class Tile
     plant_count * LIFE_PER_PLANT
   end
 
-  def plant_count=(value)
-    add_or_remove_random_points(plants, value.floor) do |point|
-      Plant.new(point: point, tile: self)
-    end
-
-    plant_count
-  end
-
-  def plant_count
-    plants.count
-  end
-
-  def herbivore_count=(value)
-    add_or_remove_random_points(herbivores, value) do |point|
-      Herbivore.new(point: point, tile: self)
-    end
-    herbivore_count
-  end
-
-  def herbivore_count
-    herbivores.count
-  end
-
-  def carnivore_count=(value)
-    add_or_remove_random_points(carnivores, value) do |point|
-      Carnivore.new(point: point, tile: self)
-    end
-    carnivore_count
-  end
-
-  def carnivore_count
-    carnivores.count
-  end
-
   def adjacent_tiles
     [left_tile, right_tile, bottom_tile, top_tile].compact
   end
@@ -91,7 +52,7 @@ class Tile
   end
 
   def point_available_for(point, entity)
-    animals_of_type(entity.class).none? { |ent| ent.collides_with?(entity.bounding_box(point)) }
+    life_of_type(entity.class).none? { |ent| ent.collides_with?(entity.bounding_box(point)) }
   end
 
   def as_json(options={ })
@@ -124,7 +85,7 @@ class Tile
 
   def reproduce(animal_class)
     if food_count_for(animal_class) > animal_class.minimum_food
-      animal_count = animals_of_type(animal_class).count
+      animal_count = life_of_type(animal_class).count
       if animal_class.add_one_until > 0 && animal_count >= animal_class.add_one_until
         set_life_count(animal_class, animal_count + Random.rand(animal_count / 2))
       elsif Random.rand < animal_class.chance_to_spawn
@@ -141,28 +102,8 @@ class Tile
 
   private
 
-  def set_life_count(animal_class, new_count)
-    send("#{animal_class.name.downcase}_count=", new_count)
-  end
-
   def seed_plants
     self.plant_count = Random.rand < 0.3 ? Random.rand(12) : 0
-  end
-
-  def add_or_remove_random_points(array, desired_count)
-    delta = desired_count - array.count
-    if delta > 0
-      (0...delta).each do
-        life = nil
-        begin
-          life = yield(POSSIBLE_POINTS.sample)
-        end while array.any? { |entity| entity.collides_with?(life.bounding_box) }
-
-        array << life
-      end
-    else
-      (0...delta.abs).each { array.shift }
-    end
   end
 
   def spread_life_to_adjacent_tile(tile)
@@ -181,5 +122,9 @@ class Tile
 
   def plant_count_with_probability(probability)
     (Random.rand < probability) ? 2 : 0
+  end
+
+  def possible_points
+    POSSIBLE_POINTS
   end
 end

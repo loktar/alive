@@ -1,7 +1,7 @@
 class Herbivore < Entity
-  include Hunger
-  include Movement
-  include Reproduction
+  include Entities::Hunger
+  include Entities::Movement
+  include Entities::Reproduction
   max_age 12
   eats food_type: :plant, turns_before_hungry: 1
   moves 1

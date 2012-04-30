@@ -1,5 +1,5 @@
 class Entity
-  include Aging
+  include Entities::Aging
 
   @@entity_count = 0
 
