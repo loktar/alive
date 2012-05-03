@@ -1,46 +1,60 @@
 (function (app) {
-  app.views.World = Backbone.View.extend({
-    tileSize: 50,
-    className: 'world',
+  var directions = {
+    up: 38,
+    down: 40,
+    left: 37,
+    right: 39
+  };
 
-//    events: {
-//      'click .entity': 'killEntity',
-//      'mouseover .entity': 'killEntity'
-//    },
+  app.views.World = Backbone.View.extend({
+    tileSize: 250,
+    className: 'world',
+    arrowKeyDistance: 5,
+
+    events: {
+    },
 
     initialize: function () {
       this.collection.on('reset', this.render, this);
+      $(document.body).on('keydown', this.moveScreenByArrowKey.bind(this));
     },
 
     render: function () {
-      var self = this, maxX = 0, maxY = 0;
+      var self = this;
 
-      this.$el.empty();
+      if (this.$tiles) {
+        this.$tiles.empty();
+      } else {
+        this.$tiles = $('<div class="tiles"></div>');
+        this.$el.append(this.$tiles);
+      }
+
       this.collection.each(function (tile) {
         var view = new app.views.Tile({model: tile, tileSize: self.tileSize});
 
-        maxX = Math.max(maxX, tile.get('x'));
-        maxY = Math.max(maxY, tile.get('y'));
-
-        self.$el.append(view.render().$el);
-      });
-
-      this.$el.css({
-        height: this.tileSize * (maxY + 1),
-        width: this.tileSize * (maxX + 1)
+        self.$tiles.append(view.render().$el);
       });
 
       return this;
     },
 
-    killEntity: function (e) {
-      var entityId = this.$(e.target).data('entity');
-      $.ajax({
-        url: '/entities/' + entityId,
-        type: 'DELETE'
-      }).done(function () {
-          app.allLife.remove(entityId);
-        });
+    moveScreenByArrowKey: function (e) {
+      var position = this.$tiles.position();
+      var top = position.top;
+      var left = position.left;
+      if (e.keyCode === directions.up) {
+        top += this.arrowKeyDistance;
+      } else if (e.keyCode === directions.down) {
+        top -= this.arrowKeyDistance;
+      } else if (e.keyCode === directions.left) {
+        left += this.arrowKeyDistance;
+      } else if (e.keyCode === directions.right) {
+        left -= this.arrowKeyDistance;
+      }
+
+      var newTop = Math.min(0, Math.max(-1 * this.$tiles.height() + this.$el.height(), top));
+      var newLeft = Math.min(0, Math.max(-1 * this.$tiles.width() + this.$el.width(), left));
+      this.$tiles.css({top: newTop, left: newLeft});
     }
   });
 }(Alive));
